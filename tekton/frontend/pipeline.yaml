@@ -45,7 +45,7 @@ metadata:
   namespace: testing-workspace
 spec:
   params:
-  - name: URL
+  - name: url
     type: string
   - name: IMAGE
     type: string
@@ -62,7 +62,7 @@ spec:
           workspace: shared-workspace
       params: 
         - name: url
-          value: $(params.URL)
+          value: $(params.url)
 #Maven pacakge
     - name: install
       taskRef:

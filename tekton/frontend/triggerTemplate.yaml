@@ -6,7 +6,6 @@ metadata:
 spec:
   params:
   - name: url
-  - name: commitSHA
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -23,13 +22,12 @@ spec:
                 - ReadWriteOnce
               resources:
                 requests:
-                  storage: 1Gi  
-            storageClassName: lvms-vg1
+                  storage: 1Gi 
         params:
         - name: url
           value: $(tt.params.url)
         - name: IMAGE
-          value: sharon0706/observai_backend:$(tt.params.commitSHA)
+          value: sharon0706/observai_zaga_ui:latest
 
 
 
