@@ -1,0 +1,99 @@
+apiVersion: tekton.dev/v1beta1 
+kind: Task 
+metadata: 
+  name: install
+  namespace: testing-workspace
+spec:
+  workspaces: 
+    - name: output
+  steps:
+    - name: npm-install
+      image: node
+      command:
+        - /bin/sh
+        - -c
+      args:
+        - npm install
+      workingDir: $(workspaces.output.path)
+
+---
+
+apiVersion: tekton.dev/v1beta1 
+kind: Task 
+metadata: 
+  name: run-build
+  namespace: testing-workspace
+spec: 
+  workspaces: 
+    - name: output
+  steps:
+    - name: run-build
+      image: node:current-alpine3.18
+      workingDir: $(workspaces.output.path) 
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - npm run build --prod
+
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata: 
+  name: app-deployment
+  namespace: testing-workspace
+spec:
+  params:
+  - name: URL
+    type: string
+  - name: IMAGE
+    type: string
+  workspaces:
+    - name: shared-workspace
+  tasks:
+#Git Clone Cluster Task
+    - name: clone-from-git
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params: 
+        - name: url
+          value: $(params.URL)
+#Maven pacakge
+    - name: install
+      taskRef:
+        name: install
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      runAfter:
+        - clone-from-git
+    - name: run-build
+      taskRef:
+        name: run-build
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      runAfter:
+        - install
+# Docker push
+    - name: push
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+      - name: DOCKERFILE
+        value: Dockerfile
+      - name: IMAGE
+        value: $(params.IMAGE)
+      workspaces:
+      - name: source
+        workspace: shared-workspace
+      runAfter:
+       - run-build
+
+

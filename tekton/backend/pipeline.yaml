@@ -1,0 +1,67 @@
+apiVersion: tekton.dev/v1beta1 
+kind: Task 
+metadata: 
+  name: maven-package
+  namespace: testing-workspace
+spec:
+  workspaces:
+    - name: output
+  steps: 
+    - name: package
+      image: maven:3.9.4-eclipse-temurin-11-alpine 
+      workingDir: $(workspaces.output.path) 
+      script: |
+       mvn package -DskipTests
+
+--- 
+
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata: 
+  name: app-deployment-backend
+  namespace: testing-workspace
+spec:
+  params:
+  - name: url
+    type: string
+  - name: IMAGE
+    type: string
+    description: image to be build from the code
+  workspaces:
+    - name: shared-workspace
+  tasks:
+#Git Clone Cluster Task
+    - name: clone-from-git
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params: 
+        - name: url
+          value: $(params.url)
+#Maven pacakge
+    - name: packaging
+      taskRef: 
+        name: maven-package
+      workspaces: 
+        - name: output 
+          workspace: shared-workspace
+      runAfter:
+      - clone-from-git
+# Docker push
+    - name: push
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+      - name: DOCKERFILE
+        value: src/main/docker/Dockerfile.jvm
+      - name: IMAGE
+        value: $(params.IMAGE)
+      workspaces:
+      - name: source
+        workspace: shared-workspace
+      runAfter:
+       - packaging

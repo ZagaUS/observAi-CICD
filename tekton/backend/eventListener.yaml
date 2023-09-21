@@ -1,0 +1,13 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: github-commit-listener
+  namespace: testing-workspace
+spec:
+  serviceAccountName: tekton-triggers-example-minimal
+  triggers:
+    - name: github-trigger
+      bindings:
+      - ref: github-binding
+      template:
+        ref: github-template

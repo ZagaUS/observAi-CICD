@@ -1,0 +1,20 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: github-trigger-ui
+  namespace: testing-workspace
+spec:
+  interceptors:
+    - ref:
+        name: cel-interceptor
+      params:
+        - name: filter
+          value: "header.match('X-GitHub-Event', 'push')"
+        - name: "overlays"
+          value:
+            - key: extensions.truncated_sha
+              expression: "body.pull_request.head.sha.truncate(7)"
+  bindings:
+    - ref: github-binding-ui
+  template:
+    ref: github-template-ui

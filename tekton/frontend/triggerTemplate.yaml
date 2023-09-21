@@ -1,0 +1,36 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: github-template-ui
+  namespace: testing-workspace
+spec:
+  params:
+  - name: url
+  - name: commitSHA
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: app-deployment-
+      spec:
+        pipelineRef:
+          name: app-deployment
+        workspaces:
+        - name: shared-workspace
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi  
+            storageClassName: lvms-vg1
+        params:
+        - name: url
+          value: $(tt.params.url)
+        - name: IMAGE
+          value: sharon0706/observai_backend:$(tt.params.commitSHA)
+
+
+
+

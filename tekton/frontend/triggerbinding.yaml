@@ -1,0 +1,15 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: github-binding-ui
+  namespace: testing-workspace
+spec:
+  params:
+    - name: url
+      value: $(body.repository.clone_url)
+    - name: commitSHA
+      value: $(body.head_commit.id)
+
+
+
+
