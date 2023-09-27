@@ -9,12 +9,3 @@ frontend:
     port: 80
     targetPort: 8080
 
-backend:
-  replicaCount: 1
-  image:
-    repository: sharon0706/observai_backend
-    tag: latest
-    pullPolicy: Always
-  service:
-    type: ClusterIP
-    port: 8080

@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Release.Name }}-route
+spec:
+  selector:
+    app: {{ .Release.Name }}-backend
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-service
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  port:
+    targetPort: 8080

@@ -16,13 +16,8 @@ spec:
           name: app-deployment
         workspaces:
         - name: shared-workspace
-          volumeClaimTemplate:
-            spec:
-              accessModes:
-                - ReadWriteOnce
-              resources:
-                requests:
-                  storage: 1Gi 
+          persistentVolumeClaim:
+            claimName: nexus-pvc
         params:
         - name: url
           value: $(tt.params.url)

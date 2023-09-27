@@ -9,7 +9,7 @@ spec:
         name: cel-interceptor
       params:
         - name: filter
-          value: "header.match('X-GitHub-Event', 'push')"
+          value: "header.match('X-GitHub-Event', 'pull_request')"
   bindings:
     - ref: github-binding-ui
   template:

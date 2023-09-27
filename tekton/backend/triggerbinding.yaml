@@ -7,8 +7,7 @@ spec:
   params:
     - name: url
       value: $(body.repository.clone_url)
-    - name: commitSHA
-      value: $(body.head_commit.id)
+
 
 
 

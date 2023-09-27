@@ -9,11 +9,7 @@ spec:
         name: cel-interceptor
       params:
         - name: filter
-          value: "header.match('X-GitHub-Event', 'push')"
-        - name: "overlays"
-          value:
-            - key: extensions.truncated_sha
-              expression: "body.pull_request.head.sha.truncate(7)"
+          value: "header.match('X-GitHub-Event', 'pull_request')"
   bindings:
     - ref: github-binding
   template:

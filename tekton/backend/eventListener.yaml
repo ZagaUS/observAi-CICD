@@ -4,7 +4,7 @@ metadata:
   name: github-commit-listener
   namespace: testing-workspace
 spec:
-  serviceAccountName: tekton-triggers-example-minimal
+  # serviceAccountName: tekton-triggers-example-minimal
   triggers:
     - name: github-trigger
       bindings:
