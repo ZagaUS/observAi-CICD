@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: github-commit-listener-ui
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   # serviceAccountName: tekton-triggers-example-minimal
   triggers:

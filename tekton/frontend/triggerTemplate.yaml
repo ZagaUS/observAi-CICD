@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: github-template-ui
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   params:
   - name: url

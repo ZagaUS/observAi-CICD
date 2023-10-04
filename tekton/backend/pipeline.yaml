@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task 
 metadata: 
   name: maven-package
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   workspaces:
     - name: output
@@ -19,7 +19,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
   name: app-deployment-backend
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   params:
   - name: url

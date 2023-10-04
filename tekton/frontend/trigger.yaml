@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
 metadata:
   name: github-trigger-ui
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   interceptors:
     - ref:

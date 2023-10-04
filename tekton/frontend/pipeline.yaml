@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task 
 metadata: 
   name: install
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   workspaces: 
     - name: output
@@ -22,7 +22,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task 
 metadata: 
   name: run-build
-  namespace: testing-workspace
+  namespace: observai-main
 spec: 
   workspaces: 
     - name: output
@@ -42,7 +42,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
   name: app-deployment
-  namespace: testing-workspace
+  namespace: observai-main
 spec:
   params:
   - name: url
@@ -63,7 +63,7 @@ spec:
       params: 
         - name: url
           value: $(params.url)
-#Maven pacakge
+#NPM pacakge
     - name: install
       taskRef:
         name: install
