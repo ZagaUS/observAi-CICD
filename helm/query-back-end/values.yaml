@@ -1,0 +1,11 @@
+querybackend:
+  replicaCount: 1
+  image:
+    repository: sharon0706/observai-query-backend-jvm
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8080
+      targetPort: 8080
+

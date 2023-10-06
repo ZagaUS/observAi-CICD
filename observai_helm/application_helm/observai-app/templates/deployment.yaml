@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+  labels:
+    app: {{ .Release.Name }}-backend
+    app.openshift.io/runtime: {{ .Values.backend.icon }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-backend
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.ports.port }}
+              protocol: TCP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-querybackend
+  labels:
+    app: {{ .Release.Name }}-querybackend
+    app.openshift.io/runtime: {{ .Values.querybackend.icon }}
+spec:
+  replicas: {{ .Values.querybackend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-querybackend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-querybackend
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.querybackend.image.repository }}:{{ .Values.querybackend.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.querybackend.service.ports.port }}
+              protocol: TCP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: {{ .Release.Name }}-frontend
+    app.openshift.io/runtime: {{ .Values.frontend.icon }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-frontend
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.ports.port }}
+              protocol: TCP
+

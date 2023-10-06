@@ -1,6 +1,0 @@
-apiVersion: v1
-name: app-ui
-version: 0.1.0
-description: A Helm chart for the otel ui application
-type: application
-namespace: testing-workspace

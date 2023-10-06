@@ -1,0 +1,19 @@
+backend:
+  replicaCount: 1
+  image:
+    repository: sharon0706/observai-backend-jvm
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8080
+      targetPort: 8080
+
+
+# values.yaml
+
+observaiBackend:
+  mongodbConnectionString: "mongodb://mongodb-ops-manager:Devdbpass2023@zaga-mongo-ops-manager-db-0.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-1.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-2.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017"
+  incomingMetricBootstrapServers: "observai-kafka-cluster-kafka-brokers.kafka-workspace.svc.cluster.local:9092"
+  incomingLogsBootstrapServers: "observai-kafka-cluster-kafka-brokers.kafka-workspace.svc.cluster.local:9092"
+  incomingTraceBootstrapServers: "observai-kafka-cluster-kafka-brokers.kafka-workspace.svc.cluster.local:9092"

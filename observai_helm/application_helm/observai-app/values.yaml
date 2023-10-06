@@ -1,0 +1,36 @@
+backend:
+  icon: quarkus
+  replicaCount: 1
+  image:
+    repository: sharon0706/observai-backend-jvm
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8080
+      targetPort: 8080
+
+querybackend:
+  icon: quarkus
+  replicaCount: 1
+  image:
+    repository: sharon0706/observai-query-backend-jvm
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8081
+      targetPort: 8081
+
+frontend:
+  icon: js
+  replicaCount: 1
+  image:
+    repository: sharon0706/obseravi-ui-insecure
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8080
+      targetPort: 8080
+

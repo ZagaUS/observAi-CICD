@@ -1,0 +1,50 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Release.Name}}-backend-route
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  to:
+    kind: Service
+    name: {{.Release.Name}}-backend-service
+  port: 
+    targetPort: {{.Values.backend.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Release.Name}}-querybackend-route
+spec:
+  selector:
+    app: {{ .Release.Name }}-querybackend
+  to:
+    kind: Service
+    name: {{.Release.Name}}-querybackend--service
+  port: 
+    targetPort: {{.Values.querybackend.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Release.Name}}-frontend-route
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  to:
+    kind: Service
+    name: {{.Release.Name}}-frontend-service
+  port: 
+    targetPort: {{.Values.frontend.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     

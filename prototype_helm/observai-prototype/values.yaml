@@ -1,0 +1,22 @@
+backend:
+  icon: quarkus
+  replicaCount: 1
+  image:
+    repository: mugicoder13/otel-extraction
+    tag: v2
+    pullPolicy: Always
+  service:
+    type: LoadBalancer
+    port: 8080
+
+frontend:
+  icon: js
+  replicaCount: 1
+  image:
+    repository: mugicoder13/otel-dashboard
+    tag: v2
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
