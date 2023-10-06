@@ -1,0 +1,10 @@
+backend:
+  replicaCount: 1
+  image:
+    repository: mugicoder13/otel-extraction
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: LoadBalancer
+    port: 8080
+    
