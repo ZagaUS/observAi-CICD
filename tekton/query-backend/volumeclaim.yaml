@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: shared-volume-claim-1
+  namespace: testing-workspace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: shared-volume-1
+  storageClassName: lvms-vg1
+  volumeMode: Filesystem
+

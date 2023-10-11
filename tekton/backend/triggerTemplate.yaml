@@ -10,19 +10,29 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: app-deployment-backend-
+        generateName: observai-backend-
       spec:
         pipelineRef:
-          name: app-deployment-backend
+          name: observai-backend
         workspaces:
         - name: shared-workspace
           persistentVolumeClaim:
-            claimName: my-pvc-2
+            claimName: shared-volume-claim
         params:
         - name: url
           value: $(tt.params.url)
-        - name: IMAGE
-          value: sharon0706/observai_backend:latest
+        - name: revision
+          value: develop
+        - name: DOCKERFILE
+          value: src/main/docker/Dockerfile.jvm
+        - name: OC_NAMESPACE
+          value: testing-workspace
+        - name: IMAGE_NAME
+          value: observai-backend
+        - name: DIRECTORY
+          value: "oc_manifests/."
+        - name: DEPLOYMENT_NAME
+          value: observai-backend
 
 
 

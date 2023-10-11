@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: ui-buildah-task
+  name: query-buildah-task
 spec:
   workspaces:
     - name: source
@@ -59,51 +59,28 @@ spec:
 apiVersion: tekton.dev/v1beta1 
 kind: Task 
 metadata: 
-  name: install
-  namespace: testing-workspace
+  name: query-maven-package
 spec:
-  workspaces: 
+  workspaces:
     - name: output
-  steps:
-    - name: npm-install
-      image: node
-      command:
-        - /bin/sh
-        - -c
-      args:
-        - npm install
-      workingDir: $(workspaces.output.path)
-
----
-
-apiVersion: tekton.dev/v1beta1 
-kind: Task 
-metadata: 
-  name: run-build
-  namespace: testing-workspace
-spec: 
-  workspaces: 
-    - name: output
-  steps:
-    - name: run-build
-      image: node:current-alpine3.18
+  steps: 
+    - name: package
+      image: maven:3.9.4-eclipse-temurin-11-alpine 
       workingDir: $(workspaces.output.path) 
-      command:
-        - /bin/sh
-        - '-c'
-      args:
-        - npm run build --prod
+      script: |
+       mvn package -DskipTests -Dquarkus.profile=prod
 
 ---
 
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
-  name: observai-ui
+  name: observai-backend-query
   namespace: testing-workspace
 spec:
   params:
   - name: url
+  - name: revision
   - name: DOCKERFILE
     default: './Dockerfile'
   - name: OC_NAMESPACE
@@ -136,27 +113,21 @@ spec:
       params: 
         - name: url
           value: $(params.url)
+        - name: revision
+          value: $(params.revision)
 #Maven pacakge
-    - name: install
+    - name: package
       taskRef:
-        name: install
+        name: query-maven-package
       workspaces:
         - name: output
           workspace: shared-workspace
       runAfter:
-        - clone-from-git
-    - name: run-build
-      taskRef:
-        name: run-build
-      workspaces:
-        - name: output
-          workspace: shared-workspace
-      runAfter:
-        - install
+      - clone-from-git
 # Docker push
     - name: buildah
       taskRef:
-        name: buildah-task
+        name: query-buildah-task
       params:
         - name: DOCKERFILE
           value: $(params.DOCKERFILE)
@@ -180,7 +151,7 @@ spec:
       - name: source
         workspace: shared-workspace
       runAfter:
-       - run-build
+       - package
     - name: deploy
       taskRef:
         name: openshift-client
@@ -205,5 +176,4 @@ spec:
         workspace: shared-workspace
       runAfter:
        - buildah
-
 

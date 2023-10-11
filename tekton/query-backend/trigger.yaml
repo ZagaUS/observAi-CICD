@@ -1,0 +1,16 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: github-trigger-query
+  namespace: testing-workspace
+spec:
+  interceptors:
+    - ref:
+        name: cel-interceptor
+      params:
+        - name: filter
+          value: "header.match('X-GitHub-Event', 'pull_request')"
+  bindings:
+    - ref: github-binding-query
+  template:
+    ref: github-template-query

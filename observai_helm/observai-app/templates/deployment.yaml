@@ -28,19 +28,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-querybackend
+  name: {{ .Release.Name }}-query-backend
   labels:
-    app: {{ .Release.Name }}-querybackend
+    app: {{ .Release.Name }}-query-backend
     app.openshift.io/runtime: {{ .Values.querybackend.icon }}
 spec:
   replicas: {{ .Values.querybackend.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-querybackend
+      app: {{ .Release.Name }}-query-backend
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-querybackend
+        app: {{ .Release.Name }}-query-backend
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -55,19 +55,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-frontend
+  name: {{ .Release.Name }}-ui
   labels:
-    app: {{ .Release.Name }}-frontend
+    app: {{ .Release.Name }}-ui
     app.openshift.io/runtime: {{ .Values.frontend.icon }}
 spec:
   replicas: {{ .Values.frontend.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-frontend
+      app: {{ .Release.Name }}-ui
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-frontend
+        app: {{ .Release.Name }}-ui
     spec:
       containers:
         - name: {{ .Chart.Name }}

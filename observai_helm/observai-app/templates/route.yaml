@@ -1,50 +1,51 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{.Release.Name}}-backend-route
+  name: {{.Release.Name}}-backend
 spec:
   selector:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-backend
   to:
     kind: Service
-    name: {{.Release.Name}}-backend-service
+    name: {{.Release.Name}}-backend
   port: 
     targetPort: {{.Values.backend.service.ports.targetPort}}
-  # tls:
-  #   termination: edge
-  #   insecureEdgeTerminationPolicy: Redirect     
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect     
 
 ---
 
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{.Release.Name}}-querybackend-route
+  name: {{.Release.Name}}-query-backend
 spec:
   selector:
-    app: {{ .Release.Name }}-querybackend
+    app: {{ .Release.Name }}-query-backend
   to:
     kind: Service
-    name: {{.Release.Name}}-querybackend--service
+    name: {{.Release.Name}}-query-backend
   port: 
     targetPort: {{.Values.querybackend.service.ports.targetPort}}
-  # tls:
-  #   termination: edge
-  #   insecureEdgeTerminationPolicy: Redirect     
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect     
 
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{.Release.Name}}-frontend-route
+  name: {{.Release.Name}}-ui
 spec:
   selector:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-ui
   to:
     kind: Service
-    name: {{.Release.Name}}-frontend-service
+    name: {{.Release.Name}}-ui
   port: 
     targetPort: {{.Values.frontend.service.ports.targetPort}}
-  # tls:
-  #   termination: edge
-  #   insecureEdgeTerminationPolicy: Redirect     
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect     
+

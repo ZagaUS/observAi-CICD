@@ -1,8 +1,65 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: buildah-task
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: DOCKERFILE
+      type: string
+      default: './Dockerfile'
+    - name: OC_NAMESPACE
+      description: Namespace for storing the image
+      type: string
+    - name: HOST
+      description: Server URL
+      type: string
+      default: image-registry.openshift-image-registry.svc:5000
+    - name: IMAGE_NAME
+      description: Name of the image
+      type: string
+    - name: IMAGE_TAG
+      description: Tag for the image
+      type: string
+      default: latest
+    - name: TLSVERIFY
+      default: 'false'
+      description: >-
+        Verify the TLS on the registry endpoint (for push/pull to a non-TLS
+        registry)
+      type: string
+    - name: FORMAT
+      default: oci
+      description: 'The format of the built container, oci or docker'
+      type: string
+    - name: BUILD_EXTRA_ARGS
+      default: ''
+      description: Extra parameters passed for the build command when building images.
+      type: string
+    - name: CONTEXT
+      default: .
+      description: Path to the directory to use as context.
+      type: string
+  steps:
+  - name: build-and-push
+    image: registry.redhat.io/rhel8/buildah
+    workingDir: $(workspaces.source.path) 
+    securityContext:
+      privileged: true
+    script: |
+
+      buildah  bud $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) --tls-verify=$(params.TLSVERIFY) --no-cache -f $(params.DOCKERFILE) -t $(params.HOST)/$(params.OC_NAMESPACE)/$(params.IMAGE_NAME):$(params.IMAGE_TAG) $(params.CONTEXT)
+
+      buildah push $(params.HOST)/$(params.OC_NAMESPACE)/$(params.IMAGE_NAME):$(params.IMAGE_TAG)
+
+
+---
+
 apiVersion: tekton.dev/v1beta1 
 kind: Task 
 metadata: 
   name: maven-package
-  namespace: testing-workspace
 spec:
   workspaces:
     - name: output
@@ -11,22 +68,37 @@ spec:
       image: maven:3.9.4-eclipse-temurin-11-alpine 
       workingDir: $(workspaces.output.path) 
       script: |
-       mvn package -DskipTests
+       mvn package -DskipTests -Dquarkus.profile=prod
 
---- 
+---
 
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
-  name: app-deployment-backend
+  name: observai-backend
   namespace: testing-workspace
 spec:
   params:
   - name: url
-    type: string
-  - name: IMAGE
-    type: string
-    description: image to be build from the code
+  - name: revision
+  - name: DOCKERFILE
+    default: './Dockerfile'
+  - name: OC_NAMESPACE
+  - name: HOST
+    default: image-registry.openshift-image-registry.svc:5000
+  - name: IMAGE_NAME
+  - name: IMAGE_TAG
+    default: latest
+  - name: TLSVERIFY
+    default: 'false'
+  - name: FORMAT
+    default: oci
+  - name: BUILD_EXTRA_ARGS
+    default: ''
+  - name: CONTEXT
+    default: .
+  - name: DIRECTORY
+  - name: DEPLOYMENT_NAME
   workspaces:
     - name: shared-workspace
   tasks:
@@ -41,27 +113,66 @@ spec:
       params: 
         - name: url
           value: $(params.url)
+        - name: revision
+          value: $(params.revision)
 #Maven pacakge
-    - name: packaging
-      taskRef: 
+    - name: package
+      taskRef:
         name: maven-package
-      workspaces: 
-        - name: output 
+      workspaces:
+        - name: output
           workspace: shared-workspace
       runAfter:
       - clone-from-git
 # Docker push
-    - name: push
+    - name: buildah
       taskRef:
-        name: buildah
-        kind: ClusterTask
+        name: buildah-task
       params:
-      - name: DOCKERFILE
-        value: src/main/docker/Dockerfile.jvm
-      - name: IMAGE
-        value: $(params.IMAGE)
+        - name: DOCKERFILE
+          value: $(params.DOCKERFILE)
+        - name: OC_NAMESPACE
+          value: $(params.OC_NAMESPACE)
+        - name: HOST
+          value: $(params.HOST)
+        - name: IMAGE_NAME
+          value: $(params.IMAGE_NAME)
+        - name: IMAGE_TAG
+          value: $(params.IMAGE_TAG)
+        - name: TLSVERIFY
+          value: $(params.TLSVERIFY)
+        - name: FORMAT
+          value: $(params.FORMAT)
+        - name: BUILD_EXTRA_ARGS
+          value: $(params.BUILD_EXTRA_ARGS)
+        - name: CONTEXT
+          value: $(params.CONTEXT)
       workspaces:
       - name: source
         workspace: shared-workspace
       runAfter:
-       - packaging
+       - package
+    - name: deploy
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      params:
+      - name: DIRECTORY
+        value: $(params.DIRECTORY)
+      - name: DEPLOYMENT_NAME
+        value: $(params.DEPLOYMENT_NAME)
+      - name: OC_NAMESPACE
+        value: $(params.OC_NAMESPACE)
+      - name: SCRIPT
+        value: | 
+                if kubectl get deploymentconfig $(params.DEPLOYMENT_NAME) -n $(params.OC_NAMESPACE) > /dev/null 2>&1; 
+                then
+                echo "Deployment Config $(params.DEPLOYMENT_NAME) exists."
+                else
+                oc apply -k $(params.DIRECTORY)
+                fi                 
+      workspaces:
+      - name: manifest-dir
+        workspace: shared-workspace
+      runAfter:
+       - buildah

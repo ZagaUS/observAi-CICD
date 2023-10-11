@@ -26,7 +26,7 @@ frontend:
   icon: js
   replicaCount: 1
   image:
-    repository: sharon0706/obseravi-ui-insecure
+    repository: sharon0706/obseravi-ui
     tag: latest
   service:
     type: ClusterIP

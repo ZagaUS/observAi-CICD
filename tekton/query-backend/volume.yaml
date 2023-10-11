@@ -1,0 +1,41 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+
+  ###
+  name: shared-volume-1
+  ###
+
+spec:
+   ###
+  capacity:
+    storage: 1Gi
+    ###
+
+  csi:
+    driver: topolvm.io
+    volumeHandle: 9af260c0-ba90-4a52-818a-361d396b7353
+    fsType: xfs
+    volumeAttributes:
+      storage.kubernetes.io/csiProvisionerIdentity: 1696683547287-8081-topolvm.io
+  accessModes:
+    - ReadWriteOnce
+
+    ###
+  claimRef:
+    kind: PersistentVolumeClaim
+    namespace: testing-workspace
+    name: shared-volume-claim-1
+    ###
+
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: lvms-vg1
+  volumeMode: Filesystem
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: topology.topolvm.io/node
+              operator: In
+              values:
+                - 52-54-00-72-02-2a

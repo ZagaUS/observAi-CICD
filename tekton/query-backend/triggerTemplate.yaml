@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: github-template-ui
+  name: github-template-query
   namespace: testing-workspace
 spec:
   params:
@@ -10,29 +10,30 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: observai-ui-
+        generateName: observai-backend-query-
       spec:
         pipelineRef:
-          name: observai-ui
+          name: observai-backend-query
         workspaces:
         - name: shared-workspace
           persistentVolumeClaim:
-            claimName: shared-volume-claim-2
+            claimName: shared-volume-claim-1
         params:
         - name: url
           value: $(tt.params.url)
         - name: revision
           value: develop
         - name: DOCKERFILE
-          value: Dockerfile
+          value: src/main/docker/Dockerfile.jvm
         - name: OC_NAMESPACE
           value: testing-workspace
         - name: IMAGE_NAME
-          value: observai-ui
+          value: observai-query-backend
         - name: DIRECTORY
           value: "oc_manifests/."
         - name: DEPLOYMENT_NAME
-          value: observai-ui-insecure
+          value: observai-query-backend
+
 
 
 

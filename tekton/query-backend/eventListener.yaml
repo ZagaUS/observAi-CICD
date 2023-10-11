@@ -1,12 +1,12 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: github-commit-listener
+  name: github-commit-listener-query
   namespace: testing-workspace
 spec:
   triggers:
-    - name: github-trigger
+    - name: github-trigger-query
       bindings:
-      - ref: github-binding
+      - ref: github-binding-query
       template:
-        ref: github-template
+        ref: github-template-query
