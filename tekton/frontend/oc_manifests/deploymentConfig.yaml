@@ -1,0 +1,60 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: observai-ui-insecure
+  namespace: testing-workspace
+  labels:
+      app.kubernetes.io/part-of: observai
+spec:
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - observai-ui-insecure
+        from:
+          kind: ImageStreamTag
+          namespace: testing-workspace
+          name: 'observai-ui-insecure:latest'
+  replicas: 1
+  selector:
+      app: observai-ui-insecure
+  template:
+    metadata:
+      labels:
+        app: observai-ui-insecure
+    spec:
+      containers:
+        - name: observai-ui-insecure
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/testing-workspace/observai-ui-insecure
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: REACT_APP_APIURL_LOGS
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-ui-insecure-config
+                  key: REACT_APP_APIURL_LOGS
+            - name: REACT_APP_APIURL_TRACES
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-ui-insecure-config
+                  key: REACT_APP_APIURL_TRACES
+            - name: REACT_APP_APIURL_METRICS
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-ui-insecure-config
+                  key: REACT_APP_APIURL_METRICS
+            - name: REACT_APP_APIURL_AUTH
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-ui-insecure-config
+                  key: REACT_APP_APIURL_AUTH                                 
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+
+
+
+

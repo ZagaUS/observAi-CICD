@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: observai-ui-insecure-config
+  namespace: testing-workspace
+data:
+  REACT_APP_APIURL_LOGS: "http://observai-query-backend-testing-workspace.apps.zagaopenshift.zagaopensource.com/logs"
+  REACT_APP_APIURL_TRACES: "http://observai-query-backend-testing-workspace.apps.zagaopenshift.zagaopensource.com/traces"
+  REACT_APP_APIURL_METRICS: "http://observai-query-backend-testing-workspace.apps.zagaopenshift.zagaopensource.com/metrics"
+  REACT_APP_APIURL_AUTH: "http://observai-backend-testing-workspace.apps.zagaopenshift.zagaopensource.com/AuthController"
