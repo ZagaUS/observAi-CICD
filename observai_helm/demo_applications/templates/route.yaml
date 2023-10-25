@@ -1,0 +1,73 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Values.dotnetapplication.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  selector:
+    app: {{.Values.dotnetapplication.name}}
+  to:
+    kind: Service
+    name: {{.Values.dotnetapplication.name}}
+  port: 
+    targetPort: {{.Values.dotnetapplication.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Values.quarkusapplication.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  selector:
+    app: {{.Values.quarkusapplication.name}}
+  to:
+    kind: Service
+    name: {{.Values.quarkusapplication.name}}
+  port: 
+    targetPort: {{.Values.quarkusapplication.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Values.orderproject.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  selector:
+    app: {{.Values.orderproject.name}}
+  to:
+    kind: Service
+    name: {{.Values.orderproject.name}}
+  port: 
+    targetPort: {{.Values.orderproject.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{.Values.vendorproject.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  selector:
+    app: {{.Values.vendorproject.name}}
+  to:
+    kind: Service
+    name: {{.Values.vendorproject.name}}
+  port: 
+    targetPort: {{.Values.vendorproject.service.ports.targetPort}}
+  # tls:
+  #   termination: edge
+  #   insecureEdgeTerminationPolicy: Redirect     

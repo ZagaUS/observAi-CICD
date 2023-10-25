@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.dotnetapplication.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  type: {{ .Values.dotnetapplication.service.type }}
+  ports:
+    - port: {{ .Values.dotnetapplication.service.ports.port }}
+      targetPort: {{.Values.dotnetapplication.service.ports.targetPort}}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{.Values.dotnetapplication.name}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.quarkusapplication.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  type: {{ .Values.quarkusapplication.service.type }}
+  ports:
+    - port: {{ .Values.quarkusapplication.service.ports.port }}
+      targetPort: {{.Values.quarkusapplication.service.ports.targetPort}}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{.Values.quarkusapplication.name}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.orderproject.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  type: {{ .Values.orderproject.service.type }}
+  ports:
+    - port: {{ .Values.orderproject.service.ports.port }}
+      targetPort: {{.Values.orderproject.service.ports.targetPort}}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{.Values.orderproject.name}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.vendorproject.name}}
+  namespace: {{.Values.Namespace}}
+spec:
+  type: {{ .Values.vendorproject.service.type }}
+  ports:
+    - port: {{ .Values.vendorproject.service.ports.port }}
+      targetPort: {{.Values.vendorproject.service.ports.targetPort}}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{.Values.vendorproject.name}}

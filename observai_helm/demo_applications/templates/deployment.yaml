@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.dotnetapplication.name }}
+  namespace: {{.Values.Namespace}}
+  labels:
+    app: {{ .Values.dotnetapplication.name}}
+    app.openshift.io/runtime: {{ .Values.dotnetapplication.icon }}
+    app.kubernetes.io/part-of: instrumented-apps
+spec:
+  replicas: {{ .Values.dotnetapplication.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{.Values.dotnetapplication.name }}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.dotnetapplication.name }}
+    spec:
+      imagePullSecrets:
+      - name: docker-credentials
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.dotnetapplication.image.repository }}:{{.Values.dotnetapplication.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.dotnetapplication.service.ports.port }}
+              protocol: TCP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.quarkusapplication.name }}
+  namespace: {{.Values.Namespace}}
+  labels:
+    app: {{ .Values.quarkusapplication.name }}
+    app.openshift.io/runtime: {{ .Values.quarkusapplication.icon }}
+    app.kubernetes.io/part-of: instrumented-apps
+spec:
+  replicas: {{ .Values.quarkusapplication.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.quarkusapplication.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.quarkusapplication.name }}
+    spec:
+      imagePullSecrets:
+      - name: docker-credentials
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.quarkusapplication.image.repository }}:{{ .Values.quarkusapplication.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.quarkusapplication.service.ports.port }}
+              protocol: TCP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.orderproject.name }}
+  namespace: {{.Values.Namespace}}
+  labels:
+    app: {{ .Values.orderproject.name }}
+    app.openshift.io/runtime: {{ .Values.orderproject.icon }}
+    app.kubernetes.io/part-of: instrumented-apps
+spec:
+  replicas: {{ .Values.orderproject.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.orderproject.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.orderproject.name }}
+    spec:
+      imagePullSecrets:
+      - name: docker-credentials
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.orderproject.image.repository }}:{{ .Values.orderproject.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.orderproject.service.ports.port }}
+              protocol: TCP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.vendorproject.name }}
+  namespace: {{.Values.Namespace}}
+  labels:
+    app: {{ .Values.vendorproject.name }}
+    app.openshift.io/runtime: {{ .Values.vendorproject.icon }}
+    app.kubernetes.io/part-of: instrumented-apps
+spec:
+  replicas: {{ .Values.vendorproject.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.vendorproject.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.vendorproject.name }}
+    spec:
+      imagePullSecrets:
+      - name: docker-credentials
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.vendorproject.image.repository }}:{{ .Values.vendorproject.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.vendorproject.service.ports.port }}
+              protocol: TCP

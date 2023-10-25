@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    service: kafka-observai
+  annotations:
+    meta.helm.sh/release-name: observai-kafka
+    meta.helm.sh/release-namespace: testing-workspace
+  name: observai-kafka
+spec:
+  selector:
+    app: observai-kafka
+  ports:
+    - name: internal
+      port: 9091
+      targetPort: {{.Values.kafka.observaikafka.targetPort}}
+    - name: external2
+      port: 9093
+      targetPort: {{.Values.kafka.observaikafka.targetPort2}}
+    - name: external
+      port: 9092
+      targetPort: {{.Values.kafka.observaikafka.targetPort1}}
+    - name: "2181"
+      port: 2181
+      targetPort: {{.Values.kafka.zookeeper.targetPort}}
+  type: ClusterIP

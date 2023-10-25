@@ -2,9 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-backend
+  namespace: {{.Values.Namespace}}
   labels:
     app: {{ .Release.Name }}-backend
     app.openshift.io/runtime: {{ .Values.backend.icon }}
+    app.kubernetes.io/part-of: observai-apps
 spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
@@ -15,6 +17,8 @@ spec:
       labels:
         app: {{ .Release.Name }}-backend
     spec:
+      imagePullSecrets:
+      - name: docker-cred
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag}}"
@@ -22,6 +26,67 @@ spec:
             - name: http
               containerPort: {{ .Values.backend.service.ports.port }}
               protocol: TCP
+          env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: APP_PORT
+            - name: APP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: APP_HOST
+            - name: MONGODB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: MONGODB_URL
+            - name: TRACE_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: TRACE_BOOTSTRAP_URL
+            - name: TRACE_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: TRACE_TOPIC
+            - name: TRACE_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: TRACE_OFFSET_RESET
+            - name: LOG_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: LOG_BOOTSTRAP_URL
+            - name: LOG_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: LOG_TOPIC
+            - name: LOG_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: LOG_OFFSET_RESET                          
+            - name: METRIC_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: METRIC_BOOTSTRAP_URL
+            - name: METRIC_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: METRIC_TOPIC
+            - name: METRIC_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: METRIC_OFFSET_RESET  
 
 ---
 
@@ -29,9 +94,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-query-backend
+  namespace: {{.Values.Namespace}}
   labels:
     app: {{ .Release.Name }}-query-backend
     app.openshift.io/runtime: {{ .Values.querybackend.icon }}
+    app.kubernetes.io/part-of: observai-apps
 spec:
   replicas: {{ .Values.querybackend.replicaCount }}
   selector:
@@ -42,6 +109,8 @@ spec:
       labels:
         app: {{ .Release.Name }}-query-backend
     spec:
+      imagePullSecrets:
+      - name: docker-credentials
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.querybackend.image.repository }}:{{ .Values.querybackend.image.tag}}"
@@ -56,9 +125,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-ui
+  namespace: {{.Values.Namespace}}
   labels:
     app: {{ .Release.Name }}-ui
     app.openshift.io/runtime: {{ .Values.frontend.icon }}
+    app.kubernetes.io/part-of: observai-apps
 spec:
   replicas: {{ .Values.frontend.replicaCount }}
   selector:
@@ -69,6 +140,8 @@ spec:
       labels:
         app: {{ .Release.Name }}-ui
     spec:
+      imagePullSecrets:
+      - name: docker-credentials
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag}}"
@@ -76,4 +149,8 @@ spec:
             - name: http
               containerPort: {{ .Values.frontend.service.ports.port }}
               protocol: TCP
+
+---
+
+
 

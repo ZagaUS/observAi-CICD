@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-backend-config
+  namespace: {{.Values.Namespace}}
+data:
+  APP_PORT: "{{.Values.backend.config.APP_PORT}}"
+  APP_HOST: "{{.Values.backend.config.APP_HOST}}"
+  MONGODB_URL: "{{.Values.backend.config.MONGODB_URL}}"
+  TRACE_BOOTSTRAP_URL: "{{.Values.backend.config.TRACE_BOOTSTRAP_URL}}"
+  TRACE_TOPIC: "{{.Values.backend.config.TRACE_TOPIC}}"
+  TRACE_OFFSET_RESET: "{{.Values.backend.config.TRACE_OFFSET_RESET}}"
+  LOG_BOOTSTRAP_URL: "{{.Values.backend.config.LOG_BOOTSTRAP_URL}}"
+  LOG_TOPIC: "{{.Values.backend.config.LOG_TOPIC}}"
+  LOG_OFFSET_RESET: "{{.Values.backend.config.LOG_OFFSET_RESET}}"
+  METRIC_BOOTSTRAP_URL: "{{.Values.backend.config.METRIC_BOOTSTRAP_URL}}"
+  METRIC_TOPIC: "{{.Values.backend.config.METRIC_TOPIC}}"
+  METRIC_OFFSET_RESET: "{{.Values.backend.config.METRIC_OFFSET_RESET}}"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-query-backend-config
+  namespace: {{.Values.Namespace}}
+data:
+  APP_PORT: "{{.Values.querybackend.config.APP_PORT}}"
+  APP_HOST: "{{.Values.querybackend.config.APP_HOST}}"
+  MONGODB_URL: "{{.Values.querybackend.config.MONGODB_URL}}"
+
+
+

@@ -1,3 +1,4 @@
+Namespace: testing-workspace
 backend:
   icon: quarkus
   replicaCount: 1
@@ -9,7 +10,20 @@ backend:
     ports:
       port: 8080
       targetPort: 8080
-
+  config:
+    APP_PORT: "8080"
+    APP_HOST: "0.0.0.0"
+    MONGODB_URL: "mongodb://mongodb-ops-manager:Devdbpass2023@zaga-mongo-ops-manager-db-0.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-1.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-2.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017/?authMechanism=SCRAM-SHA-256&authSource=admin&connectTimeoutMS=20000&replicaSet=zaga-mongo-ops-manager-db&serverSelectionTimeoutMS=20000"
+    TRACE_BOOTSTRAP_URL: "observai-kafka.testing-workspace.svc.cluster.local:9091"
+    TRACE_TOPIC: "observai-main-1"
+    TRACE_OFFSET_RESET: "latest"
+    LOG_BOOTSTRAP_URL: "observai-kafka.testing-workspace.svc.cluster.local:9091"
+    LOG_TOPIC: "observai-main-2"
+    LOG_OFFSET_RESET: "latest"
+    METRIC_BOOTSTRAP_URL: "observai-kafka.testing-workspace.svc.cluster.local:9091"
+    METRIC_TOPIC: "observai-main-3"
+    METRIC_OFFSET_RESET: "latest"
+# observai-kafka.testing-workspace.svc.cluster.local:9092
 querybackend:
   icon: quarkus
   replicaCount: 1
@@ -21,6 +35,10 @@ querybackend:
     ports:
       port: 8081
       targetPort: 8081
+  config:
+    APP_PORT: "8081"
+    APP_HOST: "0.0.0.0"
+    MONGODB_URL: "mongodb://mongodb-ops-manager:Devdbpass2023@zaga-mongo-ops-manager-db-0.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-1.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-2.zaga-mongo-ops-manager-db-svc.mongodb-workspace.svc.cluster.local:27017/?authMechanism=SCRAM-SHA-256&authSource=admin&connectTimeoutMS=20000&replicaSet=zaga-mongo-ops-manager-db&serverSelectionTimeoutMS=20000"
 
 frontend:
   icon: js
@@ -33,4 +51,8 @@ frontend:
     ports:
       port: 8080
       targetPort: 8080
+
+kafka:
+  name: observai-kafka
+
 
