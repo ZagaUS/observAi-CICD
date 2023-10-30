@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: zaga-mongo-ops-manager-admin-pass
+  namespace: testing-workspace
+type: Opaque
+stringData:
+  Username: opsmanager-admin
+  Password: OpsManagerAdmin@123
+  FirstName: Admin
+  LastName: OpsManager
+
+--- 
+
+apiVersion: v1
+kind: Secret
+stringData:
+  password: Devdbpass2023
+type: Opaque
+metadata:
+  name: mongodb-dev-password
+  namespace: testing-workspace
+  labels:
+    app: monogdb-dev
+
+--- 
+
+kind: MongoDBOpsManager
+apiVersion: mongodb.com/v1
+metadata:
+  name: zaga-mongo-ops-manager
+  namespace: testing-workspace
+  labels:
+    app: monogdb-dev
+spec:
+  version: 6.0.11
+  adminCredentials: zaga-mongo-ops-manager-admin-pass
+  backup:
+    enabled: false
+  applicationDatabase:
+    passwordSecretKeyRef:
+      name: mongodb-dev-password
+    version: 5.0.18-ent
+    members: 3
+    # podSpec:
+    #   cpu: '1'
+    #   memory: '4G'
+  configuration:
+    mms.ignoreInitialUiSetup: "true"
+    automation.versions.source: mongodb
+    mms.adminEmailAddr: admin@zagaopensource.com
+    mms.fromEmailAddr: sharanya@zagaopensource.com
+    mms.mail.hostname: localhost.com
+    mms.mail.port: "465"
+    mms.mail.ssl: "true"
+    mms.mail.transport: smtp
+    mms.minimumTLSVersion: TLSv1.2
+    mms.replyToEmailAddr: sharanya@zagaopensource.com
+  externalConnectivity:
+    type: LoadBalancer

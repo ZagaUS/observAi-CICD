@@ -1,4 +1,0 @@
-image:
-  name: otel/opentelemetry-collector-contrib
-  secret:
-    name: docker-cred

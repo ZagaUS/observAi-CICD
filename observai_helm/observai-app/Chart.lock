@@ -3,4 +3,4 @@ dependencies:
   repository: https://strimzi.io/charts/
   version: 0.36.0
 digest: sha256:e24a259b9062720b3645bb3797868aeab94760b10664d70905663fc29e7a979e
-generated: "2023-10-20T18:38:23.5597528+05:30"
+generated: "2023-10-27T15:19:12.284989039+05:30"

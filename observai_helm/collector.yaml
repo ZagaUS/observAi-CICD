@@ -1,0 +1,65 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: testing-coll
+spec:
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.78.0
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+
+    processors:
+      batch:
+      memory_limiter:
+        check_interval: 50s
+        limit_mib: 4000
+        spike_limit_mib: 500
+    
+    exporters:
+      logging: 
+        
+      kafka/traces:
+        brokers: 
+          - 10.110.205.198:9092
+        topic: all-traces-1
+        encoding: otlp_json
+        protocol_version: 3.4.0
+
+      kafka/metrics:
+        brokers: 
+          - 10.110.205.198:9092
+        topic: all-metrics-1
+        encoding: otlp_json
+        protocol_version: 3.4.0
+ 
+      kafka/logs:
+        brokers: 
+          - 10.110.205.198:9092
+        topic: all-logs-1
+        encoding: otlp_json
+        protocol_version: 3.4.0 
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [kafka/traces, logging]
+
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [kafka/metrics, logging]
+
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [kafka/logs, logging]
+          
+  mode: deployment
+  resources: {}
+  targetAllocator: {}
+

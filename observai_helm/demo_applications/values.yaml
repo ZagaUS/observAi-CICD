@@ -1,30 +1,3 @@
-Namespace: testing-workspace
-dotnetapplication:
-  name: dotnet-mvc-crud
-  icon: dotnet
-  replicaCount: 1
-  image:
-    repository: mugicoder13/dotnet-mvc-crud
-    tag: latest
-  service:
-    type: ClusterIP
-    ports:
-      port: 4000
-      targetPort: 4000
-
-quarkusapplication:
-  name: personal-details-jvm
-  icon: quarkus
-  replicaCount: 1
-  image:
-    repository: mugicoder13/personal-details-jvm
-    tag: latest
-  service:
-    type: ClusterIP
-    ports:
-      port: 8080
-      targetPort: 8080
-
 orderproject:
   name: order-project
   icon: spring-boot
