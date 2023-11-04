@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.orderproject.name }}-config
+  namespace: {{.Values.Namespace}}
+data:
+  POSTGRES_URL: "{{.Values.orderproject.config.POSTGRES_URL}}"
+  POSTGRES_USER: "{{.Values.orderproject.config.POSTGRES_USER}}"
+  POSTGRES_PASSWORD: "{{.Values.orderproject.config.POSTGRES_PASSWORD}}"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.vendorproject.name }}-config
+  namespace: {{.Values.Namespace}}
+data:
+  POSTGRES_URL: "{{.Values.vendorproject.config.POSTGRES_URL}}"
+  POSTGRES_USER: "{{.Values.vendorproject.config.POSTGRES_USER}}"
+  POSTGRES_PASSWORD: "{{.Values.vendorproject.config.POSTGRES_PASSWORD}}"
+  APP_APIURL: "{{.Values.vendorproject.config.APP_APIURL}}"
+  

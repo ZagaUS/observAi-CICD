@@ -3,24 +3,32 @@ orderproject:
   icon: spring-boot
   replicaCount: 1
   image:
-    repository: mugicoder13/order-project
+    repository: sharon0706/orderproject
     tag: latest
   service:
     type: ClusterIP
     ports:
       port: 5089
       targetPort: 5089
+  config:
+    POSTGRES_URL: "jdbc:postgresql://10.100.89.131:5432/observability-demo-tables"
+    POSTGRES_USER: "observability-demo-user"
+    POSTGRES_PASSWORD: "observability123"
 
 vendorproject:
   name: vendor-project
   icon: spring-boot
   replicaCount: 1
   image:
-    repository: mugicoder13/vendor-project
+    repository: sharon0706/vendorproject
     tag: latest
   service:
     type: ClusterIP
     ports:
       port: 8080
       targetPort: 8080
-
+  config:
+    POSTGRES_URL: "jdbc:postgresql://10.100.89.131:5432/observability-demo-tables"
+    POSTGRES_USER: "observability-demo-user"
+    POSTGRES_PASSWORD: "observability123"
+    APP_APIURL: "http://10.109.111.95:5089/orders/getOrders"

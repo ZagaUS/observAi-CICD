@@ -23,21 +23,21 @@ spec:
         
       kafka/traces:
         brokers: 
-          - 10.110.205.198:9092
+          - 10.97.63.160:9092
         topic: all-traces-1
         encoding: otlp_json
         protocol_version: 3.4.0
 
       kafka/metrics:
         brokers: 
-          - 10.110.205.198:9092
+          - 10.97.63.160:9092
         topic: all-metrics-1
         encoding: otlp_json
         protocol_version: 3.4.0
  
       kafka/logs:
         brokers: 
-          - 10.110.205.198:9092
+          - 10.97.63.160:9092
         topic: all-logs-1
         encoding: otlp_json
         protocol_version: 3.4.0 

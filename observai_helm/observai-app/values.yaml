@@ -3,7 +3,7 @@ backend:
   icon: quarkus
   replicaCount: 1
   image:
-    repository: sharon0706/observai-backend-jvm
+    repository: harinolon/observai-persistance-jvm
     tag: latest
   service:
     type: ClusterIP
@@ -14,13 +14,13 @@ backend:
     APP_PORT: "8080"
     APP_HOST: "0.0.0.0"
     MONGODB_URL: "mongodb://mongodb-ops-manager:Devdbpass2023@zaga-mongo-ops-manager-db-0.zaga-mongo-ops-manager-db-svc.testing-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-1.zaga-mongo-ops-manager-db-svc.testing-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-2.zaga-mongo-ops-manager-db-svc.testing-workspace.svc.cluster.local:27017/?authMechanism=SCRAM-SHA-256&authSource=admin&connectTimeoutMS=20000&replicaSet=zaga-mongo-ops-manager-db&serverSelectionTimeoutMS=20000"
-    TRACE_BOOTSTRAP_URL: "10.110.205.198:9092" 
+    TRACE_BOOTSTRAP_URL: "kafka-helm-kafka-bootstrap.kafka-workspace.svc.cluster.local:9092" 
     TRACE_TOPIC: "all-traces-1"
     TRACE_OFFSET_RESET: "latest"
-    LOG_BOOTSTRAP_URL: "10.110.205.198:9092"
+    LOG_BOOTSTRAP_URL: "kafka-helm-kafka-bootstrap.kafka-workspace.svc.cluster.local:9092"
     LOG_TOPIC: "all-metrics-1"
     LOG_OFFSET_RESET: "latest"
-    METRIC_BOOTSTRAP_URL: "10.110.205.198:9092"
+    METRIC_BOOTSTRAP_URL: "kafka-helm-kafka-bootstrap.kafka-workspace.svc.cluster.local:9092"
     METRIC_TOPIC: "all-logs-1"
     METRIC_OFFSET_RESET: "latest"
 # observai-kafka.testing-workspace.svc.cluster.local:9092
@@ -28,7 +28,7 @@ querybackend:
   icon: quarkus
   replicaCount: 1
   image:
-    repository: sharon0706/observai-query-backend-jvm
+    repository: umamuthu1994/observai-query-backend-jvm
     tag: latest
   service:
     type: ClusterIP
@@ -44,7 +44,7 @@ frontend:
   icon: js
   replicaCount: 1
   image:
-    repository: sharon0706/obseravi-ui
+    repository: raga2707/obseravi-frontend
     tag: latest
   service:
     type: ClusterIP

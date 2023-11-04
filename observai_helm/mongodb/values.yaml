@@ -1,0 +1,28 @@
+# Admin Secret
+admin:
+  username: opsmanager-admin-helm
+  password: OpsManagerAdmin@123
+  firstname: Admin
+  lastname: OpsManager
+
+# DB Secret
+db:
+  password: Devdbpass2023
+
+
+# Ops Manager Values
+name: zaga-mongo-ops-manager-helm
+version: 6.0.11
+replicas: 3
+adminCredentials: zaga-mongo-ops-manager-admin-pass-helm
+backup: false
+dbVersion: 5.0.18-ent
+dbSecret: mongodb-dev-password-helm
+configuration:
+  source: mongodb
+  adminEmailAddr: admin@zagaopensource.com
+  emailAddr: sharanya@zagaopensource.com
+  hostname: zagamail-1.apps.zagaopenshift.zagaopensource.com
+  minimumTLSVersion: TLSv1.2
+  replyToEmailAddr: sharanya@zagaopensource.com
+type: LoadBalancer

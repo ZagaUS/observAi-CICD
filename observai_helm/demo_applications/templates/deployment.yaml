@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Values.orderproject.name }}
   namespace: {{.Values.Namespace}}
+  annotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
   labels:
     app: {{ .Values.orderproject.name }}
     app.openshift.io/runtime: {{ .Values.orderproject.icon }}
@@ -24,12 +26,30 @@ spec:
             - name: http
               containerPort: {{ .Values.orderproject.service.ports.port }}
               protocol: TCP
+          env:
+            - name: POSTGRES_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: order-project-config
+                  key: POSTGRES_URL
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: order-project-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: order-project-config
+                  key: POSTGRES_PASSWORD
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
   name: {{ .Values.vendorproject.name }}
   namespace: {{.Values.Namespace}}
   labels:
@@ -53,3 +73,24 @@ spec:
             - name: http
               containerPort: {{ .Values.vendorproject.service.ports.port }}
               protocol: TCP
+          env:
+            - name: POSTGRES_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: vendor-project-config
+                  key: POSTGRES_URL
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: vendor-project-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: vendor-project-config
+                  key: POSTGRES_PASSWORD
+            - name: APP_APIURL
+              valueFrom:
+                configMapKeyRef:
+                  name: vendor-project-config
+                  key: APP_APIURL

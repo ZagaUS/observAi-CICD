@@ -1,0 +1,35 @@
+kind: MongoDBOpsManager
+apiVersion: mongodb.com/v1
+metadata:
+  name: {{.Values.name}}
+spec:
+  # Version of the Ops Manager
+  version: {{.Values.version}}
+  # Credentials for the Ops Manager
+  adminCredentials: {{.Values.adminCredentials}}
+  # Backup enablement
+  backup:
+    enabled: {{.Values.backup}}
+  # DB configurations
+  applicationDatabase:
+    passwordSecretKeyRef:
+      # DB Secret
+      name: {{.Values.dbSecret}}
+    # DB Version
+    version: {{.Values.dbVersion}}
+    # DB Replicas
+    members: {{.Values.replicas}}
+  # Ops Manager Configuration
+  configuration:
+    mms.ignoreInitialUiSetup: 'true'
+    automation.versions.source: {{.Values.configuration.source}}
+    mms.adminEmailAddr: {{.Values.configuration.adminEmailAddr}}
+    mms.fromEmailAddr: {{.Values.configuration.emailAddr}}
+    mms.mail.hostname: {{.Values.configuration.hostname}}
+    mms.mail.port: '465'
+    mms.mail.ssl: 'true'
+    mms.mail.transport: smtp
+    mms.minimumTLSVersion: {{.Values.configuration.minimumTLSVersion}}
+    mms.replyToEmailAddr: {{.Values.configuration.replyToEmailAddr}}
+  externalConnectivity:
+    type: {{.Values.type}}

@@ -1,0 +1,12 @@
+name: kafka-helm
+kafka:
+  storage:
+    size: 1Gi
+    type: persistent-claim
+  replicas: 3
+  version: 3.5.0
+zookeeper:
+  storage:
+    size: 1Gi
+    type: persistent-claim
+  replicas: 3
