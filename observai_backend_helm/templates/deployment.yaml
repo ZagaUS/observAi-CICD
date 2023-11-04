@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.name}}
+  namespace: {{.Values.Namespace}}
+  labels:
+    app: {{.Values.name}}
+    app.openshift.io/runtime: {{ .Values.backend.icon }}
+    app.kubernetes.io/part-of: observai-apps
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{.Values.name}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.name}}
+    spec:
+      imagePullSecrets:
+      - name: {{.Values.secret}}
+      containers:
+        - name: {{.Values.name}}
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.ports.port }}
+              protocol: TCP
+          env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: APP_PORT
+            - name: APP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: APP_HOST
+            - name: MONGODB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: MONGODB_URL
+            - name: TRACE_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: TRACE_BOOTSTRAP_URL
+            - name: TRACE_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: TRACE_TOPIC
+            - name: TRACE_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: TRACE_OFFSET_RESET
+            - name: LOG_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: LOG_BOOTSTRAP_URL
+            - name: LOG_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: LOG_TOPIC
+            - name: LOG_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: LOG_OFFSET_RESET                          
+            - name: METRIC_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: METRIC_BOOTSTRAP_URL
+            - name: METRIC_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: METRIC_TOPIC
+            - name: METRIC_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: METRIC_OFFSET_RESET  

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.name}}
+  namespace: {{.Values.Namespace}}
+  labels:
+    app: {{.Values.name}}
+    app.openshift.io/runtime: {{ .Values.frontend.icon }}
+    app.kubernetes.io/part-of: observai-apps
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{.Values.name}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.name}}
+    spec:
+      imagePullSecrets:
+      - name: docker-credentials
+      containers:
+        - name: {{.Values.name}}
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.ports.port }}
+              protocol: TCP

@@ -1,0 +1,13 @@
+name: observai-ui
+Namespace: testing-workspace
+frontend:
+  icon: js
+  replicaCount: 1
+  image:
+    repository: raga2707/obseravi-frontend
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8080
+      targetPort: 8080

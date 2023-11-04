@@ -1,0 +1,18 @@
+name: observai-query-backend
+Namespace: testing-workspace
+secret: docker-cred
+querybackend:
+  icon: quarkus
+  replicaCount: 1
+  image:
+    repository: umamuthu1994/observai-query-backend-jvm
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8081
+      targetPort: 8081
+  config:
+    APP_PORT: "8081"
+    APP_HOST: "0.0.0.0"
+    MONGODB_URL: "mongodb://mongodb-ops-manager:Devdbpass2023@zaga-mongo-ops-manager-db-0.zaga-mongo-ops-manager-db-svc.testing-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-1.zaga-mongo-ops-manager-db-svc.testing-workspace.svc.cluster.local:27017,zaga-mongo-ops-manager-db-2.zaga-mongo-ops-manager-db-svc.testing-workspace.svc.cluster.local:27017/?authMechanism=SCRAM-SHA-256&authSource=admin&connectTimeoutMS=20000&replicaSet=zaga-mongo-ops-manager-db&serverSelectionTimeoutMS=20000"
