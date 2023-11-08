@@ -1,8 +1,8 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: observai-ui-insecure
+  name: observai-dashboard
 spec:
   to:
     kind: Service
-    name: observai-ui-insecure
+    name: observai-dashboard

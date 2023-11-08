@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: observai-ui-insecure
+  name: observai-dashboard
   namespace: testing-workspace
 spec:
   selector:
-    app: observai-ui-insecure
+    app: observai-dashboard
   ports:
     - protocol: TCP
       port: 8080

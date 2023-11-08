@@ -28,8 +28,12 @@ spec:
       params:
       - name: SCRIPT
         value: | 
-                oc apply -f ./oc_manifests/buildConfig.yaml
-                oc apply -f ./oc_manifests/deploymentConfig.yaml                
+                oc apply -f tekton/frontend/oc_manifests/buildConfig.yaml
+                oc apply -f tekton/frontend/oc_manifests/deploymentConfig.yaml     
+                oc apply -f tekton/frontend/oc_manifests/service.yaml
+                oc apply -f tekton/frontend/oc_manifests/route.yaml
       workspaces:
       - name: manifest-dir
         workspace: shared-workspace
+      runAfter:
+      - clone-from-git
