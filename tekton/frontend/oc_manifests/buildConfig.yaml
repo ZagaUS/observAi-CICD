@@ -1,0 +1,23 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: observai-dashboard
+  namespace: testing-workspace
+  labels:
+    name: observai
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'observai-dashboard:latest'
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/ZagaUS/obeservAi-zaga.git'
+      ref: 'develop'
+  triggers:
+    - type: ConfigChange

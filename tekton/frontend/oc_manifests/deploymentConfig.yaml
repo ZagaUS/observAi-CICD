@@ -1,60 +1,38 @@
-apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
 metadata:
-  name: observai-ui-insecure
+  name: observai-dashboard
   namespace: testing-workspace
   labels:
-      app.kubernetes.io/part-of: observai
+    app: observai-dashboard
 spec:
+  strategy:
+    type: Recreate
   triggers:
     - type: ImageChange
       imageChangeParams:
         automatic: true
         containerNames:
-          - observai-ui-insecure
+          - observai-dashboard
         from:
           kind: ImageStreamTag
           namespace: testing-workspace
-          name: 'observai-ui-insecure:latest'
+          name: 'observai-dashboard:latest'
   replicas: 1
   selector:
-      app: observai-ui-insecure
+    app: observai-dashboard
   template:
     metadata:
       labels:
-        app: observai-ui-insecure
+        app: observai-dashboard
     spec:
       containers:
-        - name: observai-ui-insecure
-          image: >-
-            image-registry.openshift-image-registry.svc:5000/testing-workspace/observai-ui-insecure
+        - name: observai-dashboard
           ports:
             - containerPort: 8080
               protocol: TCP
-          env:
-            - name: REACT_APP_APIURL_LOGS
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-ui-insecure-config
-                  key: REACT_APP_APIURL_LOGS
-            - name: REACT_APP_APIURL_TRACES
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-ui-insecure-config
-                  key: REACT_APP_APIURL_TRACES
-            - name: REACT_APP_APIURL_METRICS
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-ui-insecure-config
-                  key: REACT_APP_APIURL_METRICS
-            - name: REACT_APP_APIURL_AUTH
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-ui-insecure-config
-                  key: REACT_APP_APIURL_AUTH                                 
           imagePullPolicy: IfNotPresent
-      restartPolicy: Always
-
-
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/testing-workspace/observai-dashboard:latest
 
 
