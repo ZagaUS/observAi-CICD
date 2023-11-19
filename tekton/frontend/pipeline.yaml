@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
-  name: observai-ui
+  name: observai-ui-pipeline
   namespace: testing-workspace
 spec:
   params:

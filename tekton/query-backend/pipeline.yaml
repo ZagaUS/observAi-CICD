@@ -157,20 +157,12 @@ spec:
         name: openshift-client
         kind: ClusterTask
       params:
-      - name: DIRECTORY
-        value: $(params.DIRECTORY)
-      - name: DEPLOYMENT_NAME
-        value: $(params.DEPLOYMENT_NAME)
-      - name: OC_NAMESPACE
-        value: $(params.OC_NAMESPACE)
+      - name: IMAGE_NAME
+        value: $(params.IMAGE_NAME)
       - name: SCRIPT
         value: | 
-                if kubectl get deploymentconfig $(params.DEPLOYMENT_NAME) -n $(params.OC_NAMESPACE) > /dev/null 2>&1; 
-                then
-                echo "Deployment Config $(params.DEPLOYMENT_NAME) exists."
-                else
-                oc apply -k $(params.DIRECTORY)
-                fi                 
+                oc import-image observai-query-api --from=$(params.IMAGE_NAME):latest --confirm -n testing-workspace
+                oc rollout latest dc/observai-query-api              
       workspaces:
       - name: manifest-dir
         workspace: shared-workspace

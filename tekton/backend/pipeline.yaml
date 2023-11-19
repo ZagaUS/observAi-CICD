@@ -2,15 +2,23 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: buildah-task
-  namespace: testing-workspace
 spec:
   workspaces:
     - name: source
-    - name: dockerconfig
   params:
     - name: DOCKERFILE
       type: string
       default: './Dockerfile'
+    - name: OC_NAMESPACE
+      description: Namespace for storing the image
+      type: string
+    - name: HOST
+      description: Server URL
+      type: string
+      default: image-registry.openshift-image-registry.svc:5000
+    - name: IMAGE_NAME
+      description: Name of the image
+      type: string
     - name: IMAGE_TAG
       description: Tag for the image
       type: string
@@ -41,28 +49,26 @@ spec:
       privileged: true
     script: |
 
-      buildah  bud $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) --tls-verify=$(params.TLSVERIFY) --no-cache -f $(params.DOCKERFILE) -t quay.io/sharanya-zaga/test-image
+      buildah bud $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) --tls-verify=$(params.TLSVERIFY) --no-cache -f $(params.DOCKERFILE) -t $(params.IMAGE_NAME):latest $(params.CONTEXT)
 
-      buildah push quay.io/sharanya-zaga/test-image:$(params.IMAGE_TAG)
+      buildah push --authfile /etc/secret-volume/config.json $(params.IMAGE_NAME):latest
 
 
 ---
 
-apiVersion: tekton.dev/v1beta1
-kind: Task
-metadata:
-  name: list-task
-  namespace: testing-workspace
+apiVersion: tekton.dev/v1beta1 
+kind: Task 
+metadata: 
+  name: maven-package
 spec:
   workspaces:
-    - name: source
-  steps:
-  - name: list
-    image: docker.io/alpine/git
-    workingDir: $(workspaces.source.path)
-    script: |
-      ls
-
+    - name: output
+  steps: 
+    - name: package
+      image: maven:3.9.4-eclipse-temurin-11-alpine 
+      workingDir: $(workspaces.output.path) 
+      script: |
+       mvn package -DskipTests -Dquarkus.profile=prod
 
 ---
 
@@ -76,7 +82,11 @@ spec:
   - name: url
   - name: revision
   - name: DOCKERFILE
-    default: 'src/main/docker/Dockerfile.jvm'
+    default: './Dockerfile'
+  - name: OC_NAMESPACE
+  - name: HOST
+    default: image-registry.openshift-image-registry.svc:5000
+  - name: IMAGE_NAME
   - name: IMAGE_TAG
     default: latest
   - name: TLSVERIFY
@@ -88,12 +98,9 @@ spec:
   - name: CONTEXT
     default: .
   - name: DIRECTORY
-  - name: CONTEXT_DIR
+  - name: DEPLOYMENT_NAME
   workspaces:
     - name: shared-workspace
-    - name: maven-settings
-    - name: maven-local-m2
-    - name: docker-credentials
   tasks:
 #Git Clone Cluster Task
     - name: clone-from-git
@@ -105,44 +112,31 @@ spec:
           workspace: shared-workspace
       params: 
         - name: url
-          value: https://github.com/ZagaUS/observAi-backend.git
+          value: $(params.url)
         - name: revision
-          value: develop
+          value: $(params.revision)
 #Maven pacakge
-    - name: maven-run
+    - name: package
       taskRef:
-        name: maven
+        name: maven-package
       workspaces:
-        - name: maven-settings
-          workspace: maven-settings
-        - name: source
+        - name: output
           workspace: shared-workspace
-        - name: maven-local-repo
-          workspace: maven-local-m2
-      params:
-        - name: CONTEXT_DIR
-          value: ""
-        - name: GOALS
-          value:
-            - -DskipTests
-            - package
       runAfter:
       - clone-from-git
 # Docker push
-    - name: listing
-      taskRef:
-        name: list-task
-      workspaces:
-        - name: source
-          workspace: shared-workspace
-      runAfter:
-      - maven-run
     - name: buildah
       taskRef:
         name: buildah-task
       params:
         - name: DOCKERFILE
           value: $(params.DOCKERFILE)
+        - name: OC_NAMESPACE
+          value: $(params.OC_NAMESPACE)
+        - name: HOST
+          value: $(params.HOST)
+        - name: IMAGE_NAME
+          value: $(params.IMAGE_NAME)
         - name: IMAGE_TAG
           value: $(params.IMAGE_TAG)
         - name: TLSVERIFY
@@ -154,33 +148,23 @@ spec:
         - name: CONTEXT
           value: $(params.CONTEXT)
       workspaces:
-      - name: dockerconfig
-        workspace: docker-credentials
       - name: source
         workspace: shared-workspace
       runAfter:
-       - maven-run
-    # - name: deploy
-    #   taskRef:
-    #     name: openshift-client
-    #     kind: ClusterTask
-    #   params:
-    #   - name: DIRECTORY
-    #     value: $(params.DIRECTORY)
-    #   - name: DEPLOYMENT_NAME
-    #     value: $(params.DEPLOYMENT_NAME)
-    #   - name: OC_NAMESPACE
-    #     value: $(params.OC_NAMESPACE)
-    #   - name: SCRIPT
-    #     value: | 
-    #             if kubectl get deploymentconfig $(params.DEPLOYMENT_NAME) -n $(params.OC_NAMESPACE) > /dev/null 2>&1; 
-    #             then
-    #             echo "Deployment Config $(params.DEPLOYMENT_NAME) exists."
-    #             else
-    #             oc apply -k $(params.DIRECTORY)
-    #             fi                 
-    #   workspaces:
-    #   - name: manifest-dir
-    #     workspace: shared-workspace
-    #   runAfter:
-    #    - buildah
+       - package
+    - name: deploy
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      params:
+      - name: IMAGE_NAME
+        value: $(params.IMAGE_NAME)
+      - name: SCRIPT
+        value: | 
+                oc import-image observai-persistance-api --from=$(params.IMAGE_NAME):latest --confirm -n testing-workspace
+                oc rollout latest dc/observai-persistance-api              
+      workspaces:
+      - name: manifest-dir
+        workspace: shared-workspace
+      runAfter:
+       - buildah

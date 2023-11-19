@@ -28,11 +28,8 @@ spec:
         - name: OC_NAMESPACE
           value: testing-workspace
         - name: IMAGE_NAME
-          value: observai-backend
-        - name: DIRECTORY
-          value: "oc_manifests/."
-        - name: DEPLOYMENT_NAME
-          value: observai-backend
+          value: quay.io/zagaos/observai-backend
+
 
 
 
