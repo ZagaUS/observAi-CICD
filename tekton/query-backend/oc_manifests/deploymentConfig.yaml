@@ -9,9 +9,6 @@ metadata:
 spec:
   strategy:
     type: Rolling
-    rollingParams:
-      maxUnavailable: 25%
-      maxSurge: 25%
     resources: {}
   triggers:
     - type: ImageChange
