@@ -1,53 +1,53 @@
-# apiVersion: tekton.dev/v1beta1
-# kind: Task
-# metadata:
-#   name: buildah-task
-#   namespace: observai-pipeline
-# spec:
-#   workspaces:
-#     - name: source
-#     - name: dockerconfig
-#       mountPath: /etc/secret-volume
-#   params:
-#     - name: DOCKERFILE
-#       type: string
-#       default: './Dockerfile'
-#     - name: IMAGE_NAME
-#       description: Name of the image
-#       type: string
-#     - name: IMAGE_TAG
-#       description: Tag for the image
-#       type: string
-#       default: latest
-#     - name: TLSVERIFY
-#       default: 'false'
-#       description: >-
-#         Verify the TLS on the registry endpoint (for push/pull to a non-TLS
-#         registry)
-#       type: string
-#     - name: FORMAT
-#       default: oci
-#       description: 'The format of the built container, oci or docker'
-#       type: string
-#     - name: BUILD_EXTRA_ARGS
-#       default: ''
-#       description: Extra parameters passed for the build command when building images.
-#       type: string
-#     - name: CONTEXT
-#       default: .
-#       description: Path to the directory to use as context.
-#       type: string
-#   steps:
-#   - name: build-and-push
-#     image: registry.redhat.io/rhel8/buildah
-#     workingDir: $(workspaces.source.path) 
-#     securityContext:
-#       privileged: true
-#     script: |
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: buildah-task
+  namespace: observai-pipeline
+spec:
+  workspaces:
+    - name: source
+    - name: dockerconfig
+      mountPath: /etc/secret-volume
+  params:
+    - name: DOCKERFILE
+      type: string
+      default: './Dockerfile'
+    - name: IMAGE_NAME
+      description: Name of the image
+      type: string
+    - name: IMAGE_TAG
+      description: Tag for the image
+      type: string
+      default: latest
+    - name: TLSVERIFY
+      default: 'false'
+      description: >-
+        Verify the TLS on the registry endpoint (for push/pull to a non-TLS
+        registry)
+      type: string
+    - name: FORMAT
+      default: oci
+      description: 'The format of the built container, oci or docker'
+      type: string
+    - name: BUILD_EXTRA_ARGS
+      default: ''
+      description: Extra parameters passed for the build command when building images.
+      type: string
+    - name: CONTEXT
+      default: .
+      description: Path to the directory to use as context.
+      type: string
+  steps:
+  - name: build-and-push
+    image: registry.redhat.io/rhel8/buildah
+    workingDir: $(workspaces.source.path) 
+    securityContext:
+      privileged: true
+    script: |
 
-#       buildah bud $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) --tls-verify=$(params.TLSVERIFY) --no-cache -f $(params.DOCKERFILE) -t $(params.IMAGE_NAME):latest $(params.CONTEXT)
+      buildah bud $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) --tls-verify=$(params.TLSVERIFY) --no-cache -f $(params.DOCKERFILE) -t $(params.IMAGE_NAME):latest $(params.CONTEXT)
 
-#       buildah push --authfile /etc/secret-volume/config.json $(params.IMAGE_NAME):latest
+      buildah push --authfile /etc/secret-volume/config.json $(params.IMAGE_NAME):latest
 
 ---
 
@@ -89,65 +89,65 @@ spec:
     - name: maven-local-m2
     - name: docker-credentials
   tasks:
-# #Git Clone Cluster Task
-#     - name: clone-from-git
-#       taskRef:
-#         name: git-clone
-#         kind: ClusterTask
-#       workspaces:
-#         - name: output
-#           workspace: shared-workspace
-#       params: 
-#         - name: url
-#           value: $(params.url)
-#         - name: revision
-#           value: $(params.revision)
-# #Maven pacakge
-#     - name: maven-run
-#       taskRef:
-#         name: maven
-#       workspaces:
-#         - name: maven-settings
-#           workspace: maven-settings
-#         - name: source
-#           workspace: shared-workspace
-#         - name: maven-local-repo
-#           workspace: maven-local-m2
-#       params:
-#         - name: CONTEXT_DIR
-#           value: ""
-#         - name: GOALS
-#           value:
-#             - -DskipTests
-#             - package
-#       runAfter:
-#       - clone-from-git
-# # Docker push
-#     - name: buildah
-#       taskRef:
-#         name: buildah-task
-#       params:
-#         - name: DOCKERFILE
-#           value: $(params.DOCKERFILE)
-#         - name: IMAGE_TAG
-#           value: $(params.IMAGE_TAG)
-#         - name: IMAGE_NAME
-#           value: $(params.IMAGE_NAME)
-#         - name: TLSVERIFY
-#           value: $(params.TLSVERIFY)
-#         - name: FORMAT
-#           value: $(params.FORMAT)
-#         - name: BUILD_EXTRA_ARGS
-#           value: $(params.BUILD_EXTRA_ARGS)
-#         - name: CONTEXT
-#           value: $(params.CONTEXT)
-#       workspaces:
-#       - name: dockerconfig
-#         workspace: docker-credentials
-#       - name: source
-#         workspace: shared-workspace
-#       runAfter:
-#        - maven-run
+#Git Clone Cluster Task
+    - name: clone-from-git
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params: 
+        - name: url
+          value: $(params.url)
+        - name: revision
+          value: $(params.revision)
+#Maven pacakge
+    - name: maven-run
+      taskRef:
+        name: maven
+      workspaces:
+        - name: maven-settings
+          workspace: maven-settings
+        - name: source
+          workspace: shared-workspace
+        - name: maven-local-repo
+          workspace: maven-local-m2
+      params:
+        - name: CONTEXT_DIR
+          value: ""
+        - name: GOALS
+          value:
+            - -DskipTests
+            - package
+      runAfter:
+      - clone-from-git
+# Docker push
+    - name: buildah
+      taskRef:
+        name: buildah-task
+      params:
+        - name: DOCKERFILE
+          value: $(params.DOCKERFILE)
+        - name: IMAGE_TAG
+          value: $(params.IMAGE_TAG)
+        - name: IMAGE_NAME
+          value: $(params.IMAGE_NAME)
+        - name: TLSVERIFY
+          value: $(params.TLSVERIFY)
+        - name: FORMAT
+          value: $(params.FORMAT)
+        - name: BUILD_EXTRA_ARGS
+          value: $(params.BUILD_EXTRA_ARGS)
+        - name: CONTEXT
+          value: $(params.CONTEXT)
+      workspaces:
+      - name: dockerconfig
+        workspace: docker-credentials
+      - name: source
+        workspace: shared-workspace
+      runAfter:
+       - maven-run
 #Git Clone Cluster Task
     - name: manifests-clone-from-git
       taskRef:
@@ -161,8 +161,8 @@ spec:
           value: 'https://github.com/ZagaUS/observAi-CICD.git'
         - name: revision
           value: main
-      # runAfter:
-      #  - buildah    
+      runAfter:
+       - buildah    
 # Deployment 
     - name: deploy
       taskRef:

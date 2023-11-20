@@ -41,7 +41,7 @@ spec:
         - name: DEPLOYMENT_NAME
           value: test-observai-query-api
         - name: DIRECTORY
-          value: tekton/backend/oc_manifests/
+          value: tekton/query-backend/oc_manifests/
         - name: IMAGE_NAME
           value: quay.io/zagaos/test-observai-query-api
 

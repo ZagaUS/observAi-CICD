@@ -1,35 +1,49 @@
-apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
 metadata:
-  name: test-observai-query-backend
+  name: test-observai-query-api
   namespace: observai-pipeline
   labels:
-      app.kubernetes.io/part-of: observai
+    app: test-observai-query-api
+    app.kubernetes.io/part-of: oc
 spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
   triggers:
     - type: ImageChange
       imageChangeParams:
         automatic: true
         containerNames:
-          - test-observai-query-backend
+          - test-observai-query-api
         from:
           kind: ImageStreamTag
           namespace: observai-pipeline
-          name: 'test-observai-query-backend:latest'
+          name: 'test-observai-query-api:latest'
+        lastTriggeredImage: >-
+          image-registry.openshift-image-registry.svc:5000/observai-pipeline/test-observai-query-api@sha256:63c8f9bf3a824f38659b3c530a4ddf9842799e41a67c6383d7c786da64291049
+    - type: ConfigChange
   replicas: 1
   selector:
-      app: test-observai-query-backend
+    app: test-observai-query-api
+    deploymentconfig: test-observai-query-api
   template:
     metadata:
       labels:
-        app: test-observai-query-backend
+        app: test-observai-query-api
+        deploymentconfig: test-observai-query-api
     spec:
-      imagePullSecrets:
-        - name: sharanya-zaga-pull-secret
       containers:
-        - name: test-observai-query-backend
+        - name: test-observai-query-api
           image: >-
-            quay.io/zagaos/test-observai-query-backend
+            quay.io/zagaos/test-observai-query-api
           ports:
             - containerPort: 8081
               protocol: TCP
@@ -48,10 +62,11 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: observai-query-backend-config
-                  key: MONGODB_URL                                
+                  key: MONGODB_URL
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
-
-
 
 
