@@ -16,10 +16,6 @@ spec:
         automatic: true
         containerNames:
           - test-observai-query-api
-        from:
-          kind: ImageStreamTag
-          namespace: observai-pipeline
-          name: 'test-observai-query-api:latest'
   replicas: 1
   selector:
     app: test-observai-query-api
