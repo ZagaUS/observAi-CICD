@@ -1,8 +1,8 @@
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  name: observai-query-backend
-  namespace: testing-workspace
+  name: test-observai-query-backend
+  namespace: observai-pipeline
   labels:
       app.kubernetes.io/part-of: observai
 spec:
@@ -11,23 +11,25 @@ spec:
       imageChangeParams:
         automatic: true
         containerNames:
-          - observai-query-backend
+          - test-observai-query-backend
         from:
           kind: ImageStreamTag
-          namespace: testing-workspace
-          name: 'observai-query-backend:latest'
+          namespace: observai-pipeline
+          name: 'test-observai-query-backend:latest'
   replicas: 1
   selector:
-      app: observai-query-backend
+      app: test-observai-query-backend
   template:
     metadata:
       labels:
-        app: observai-query-backend
+        app: test-observai-query-backend
     spec:
+      imagePullSecrets:
+        - name: sharanya-zaga-pull-secret
       containers:
-        - name: observai-query-backend
+        - name: test-observai-query-backend
           image: >-
-            image-registry.openshift-image-registry.svc:5000/testing-workspace/observai-query-backend
+            quay.io/zagaos/test-observai-query-backend
           ports:
             - containerPort: 8081
               protocol: TCP

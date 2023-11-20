@@ -3,8 +3,7 @@ kind: Kustomization
 metadata:
   name: observai-backend  
 resources:
-  # - volume.yaml
-  # - volumeclaim.yaml
+  - volumeclaim.yaml
   - eventListener.yaml
   - trigger.yaml
   - triggerbinding.yaml

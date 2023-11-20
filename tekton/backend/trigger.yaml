@@ -2,14 +2,14 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
 metadata:
   name: github-trigger
-  namespace: testing-workspace
+  namespace: observai-pipeline
 spec:
   interceptors:
     - ref:
         name: cel-interceptor
       params:
         - name: filter
-          value: "header.match('X-GitHub-Event', 'pull_request')"
+          value: "body.ref == 'refs/heads/pipeline' && header.match('X-GitHub-Event', 'push')"
   bindings:
     - ref: github-binding
   template:

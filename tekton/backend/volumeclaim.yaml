@@ -1,15 +1,26 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: shared-volume-claim
-  namespace: testing-workspace
+  name: maven-source-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
-  volumeName: shared-volume
+      storage: 500Mi
   storageClassName: lvms-vg1
-  volumeMode: Filesystem
 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: maven-local-m2-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: lvms-vg1

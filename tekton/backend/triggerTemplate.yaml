@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: github-template
-  namespace: testing-workspace
+  namespace: observai-pipeline
 spec:
   params:
   - name: url
@@ -17,18 +17,30 @@ spec:
         workspaces:
         - name: shared-workspace
           persistentVolumeClaim:
-            claimName: shared-volume-claim
+            claimName: maven-source-pvc
+        - name: docker-credentials
+          secret:
+            secretName: sharanya-zaga-pull-secret  
+        - name: maven-settings
+          emptyDir: {}
+        - name: maven-local-m2
+          persistentVolumeClaim:
+            claimName: maven-local-m2-pvc     
         params:
         - name: url
           value: $(tt.params.url)
         - name: revision
-          value: develop
+          value: pipeline
         - name: DOCKERFILE
           value: src/main/docker/Dockerfile.jvm
         - name: OC_NAMESPACE
-          value: testing-workspace
+          value: observai-pipeline
+        - name: DEPLOYMENT_NAME
+          value: test-observai-persistance-api
+        - name: DIRECTORY
+          value: tekton/backend/oc_manifests/
         - name: IMAGE_NAME
-          value: quay.io/zagaos/observai-backend
+          value: quay.io/zagaos/test-observai-persistence-api
 
 
 

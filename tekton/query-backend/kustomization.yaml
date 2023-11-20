@@ -4,7 +4,7 @@ metadata:
   name: observai-backend-query  
 resources:
   # - volume.yaml
-  # - volumeclaim.yaml
+  - volumeclaim.yaml
   - eventListener.yaml
   - trigger.yaml
   - triggerbinding.yaml

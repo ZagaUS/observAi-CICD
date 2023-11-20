@@ -2,12 +2,11 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: github-binding
-  namespace: testing-workspace
+  namespace: observai-pipeline
 spec:
   params:
     - name: url
       value: $(body.repository.clone_url)
-
 
 
 

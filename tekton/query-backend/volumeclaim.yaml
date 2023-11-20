@@ -1,15 +1,27 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: shared-volume-claim-1
-  namespace: testing-workspace
+  name: maven-source-pvc-query
+  namespace: observai-pipeline
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
-  volumeName: shared-volume-1
   storageClassName: lvms-vg1
   volumeMode: Filesystem
 
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: query-maven-local-m2-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: lvms-vg1
