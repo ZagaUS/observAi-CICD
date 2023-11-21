@@ -21,12 +21,12 @@ spec:
     - type: ConfigChange
   replicas: 1
   selector:
-    name: test-observai-query-api-1
+    name: observai
     deploymentconfig: test-observai-query-api-1
   template:
     metadata:
       labels:
-        name: test-observai-query-api-1
+        name: observai
         deploymentconfig: test-observai-query-api-1
     spec:
       containers:
