@@ -1,56 +1,47 @@
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
-  name: test-observai-query-api
+  name: test-observai-query-api-1
   namespace: observai-pipeline
   labels:
-    app: test-observai-query-api
+    app: test-observai-query-api-1
     app.kubernetes.io/part-of: observai
+    app.openshift.io/runtime: quarkus
+    app.openshift.io/runtime-namespace: observai-pipeline
 spec:
+  imagePullSecrets:
+  - name: sharanya-zaga-pull-secret
   strategy:
     type: Rolling
+    rollingParams:
+      maxUnavailable: 25%
+      maxSurge: 25%
     resources: {}
   triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-          - test-observai-query-api
+    - type: ConfigChange
   replicas: 1
   selector:
-    app: test-observai-query-api
-    deploymentconfig: test-observai-query-api
+    name: test-observai-query-api-1
+    deploymentconfig: test-observai-query-api-1
   template:
     metadata:
       labels:
-        app: test-observai-query-api
-        deploymentconfig: test-observai-query-api
+        name: test-observai-query-api-1
+        deploymentconfig: test-observai-query-api-1
     spec:
       containers:
-        - name: test-observai-query-api
+        - name: test-observai-query-api-1
           image: >-
             quay.io/zagaos/test-observai-query-api
           ports:
-            - containerPort: 8081
+            - containerPort: 8080
               protocol: TCP
-          env:
-            - name: APP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-query-backend-config
-                  key: APP_PORT
-            - name: APP_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-query-backend-config
-                  key: APP_HOST
-            - name: MONGODB_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: observai-query-backend-config
-                  key: MONGODB_URL
+            - containerPort: 8443
+              protocol: TCP
+            - containerPort: 8778
+              protocol: TCP
           resources: {}
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
-
-
+      dnsPolicy: ClusterFirst
+      securityContext: {}
