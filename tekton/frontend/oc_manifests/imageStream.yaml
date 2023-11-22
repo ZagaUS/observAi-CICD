@@ -1,0 +1,13 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: test-observai-query-api
+  namespace: observai-pipeline
+spec:
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: 'quay.io/zagaos/test-observai-query-api:latest'
+
+

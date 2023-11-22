@@ -3,6 +3,7 @@ kind: Kustomization
 metadata:
   name: observai-backend  
 resources:
+  - imageStream.yaml
   - buildConfig.yaml
   - deploymentConfig.yaml
   - service.yaml
