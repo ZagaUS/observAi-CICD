@@ -6,7 +6,7 @@ metadata:
   labels:
     app: observai-ui
     app.kubernetes.io/part-of: observai
-    app.openshift.io/runtime: quarkus
+    app.openshift.io/runtime: js
     app.openshift.io/runtime-namespace: observai-pipeline
 spec:
   strategy:
