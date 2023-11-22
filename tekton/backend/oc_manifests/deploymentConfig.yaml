@@ -18,17 +18,17 @@ spec:
   replicas: 1
   selector:
       app: test-observai-persistance-api 
-      deploymentconfig: observai-backend
+      deploymentconfig: test-observai-persistance-api
   template:
     metadata:
       labels:
-        app: test-observai-query-api
-        deploymentconfig: observai-backend
+        app: test-observai-persistance-api
+        deploymentconfig: test-observai-persistance-api
     spec:
       imagePullSecrets:
         - name: sharanya-secret
       containers:
-        - name: observai-backend
+        - name: test-observai-persistance-api
           image: >-
             quay.io/zagaos/test-observai-persistance-api
           env:
@@ -92,21 +92,21 @@ spec:
                 configMapKeyRef:
                   name: test-observai-backend-config
                   key: METRIC_OFFSET_RESET  
-            - name: KEPLER_BOOTSTRAP_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: test-observai-backend-config
-                  key: KEPLER_BOOTSTRAP_URL
-            - name: KEPLER_TOPIC
-              valueFrom:
-                configMapKeyRef:
-                  name: test-observai-backend-config
-                  key: KEPLER_TOPIC 
-            - name: KEPLER_OFFSET_RESET
-              valueFrom:
-                configMapKeyRef:
-                  name: test-observai-backend-config
-                  key: KEPLER_OFFSET_RESET                                 
+            # - name: KEPLER_BOOTSTRAP_URL
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: test-observai-backend-config
+            #       key: KEPLER_BOOTSTRAP_URL
+            # - name: KEPLER_TOPIC
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: test-observai-backend-config
+            #       key: KEPLER_TOPIC 
+            # - name: KEPLER_OFFSET_RESET
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: test-observai-backend-config
+            #       key: KEPLER_OFFSET_RESET                                 
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
       dnsPolicy: ClusterFirst

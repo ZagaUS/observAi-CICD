@@ -43,7 +43,7 @@ spec:
         - name: DIRECTORY
           value: tekton/backend/oc_manifests/
         - name: IMAGE_NAME
-          value: quay.io/zagaos/test-observai-persistence-api
+          value: quay.io/zagaos/test-observai-persistance-api
 
 
 

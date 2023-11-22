@@ -33,6 +33,7 @@ spec:
         value: | 
                 oc apply -f tekton/frontend/oc_manifests/imageStream.yaml
                 oc apply -f tekton/frontend/oc_manifests/buildConfig.yaml
+                oc start-build observai-ui
                 oc apply -f tekton/frontend/oc_manifests/deploymentConfig.yaml     
                 oc apply -f tekton/frontend/oc_manifests/service.yaml
                 oc apply -f tekton/frontend/oc_manifests/route.yaml
