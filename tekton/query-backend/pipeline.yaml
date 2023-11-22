@@ -181,10 +181,12 @@ spec:
         value: | 
                 if kubectl get deploymentconfig $(params.DEPLOYMENT_NAME) -n $(params.OC_NAMESPACE) > /dev/null 2>&1; 
                 then
+                cat tekton/query-backend/oc_manifests/deploymentConfig.yaml
                 oc import-image test-observai-query-api --from=$(params.IMAGE_NAME):latest --confirm -n testing-workspace
                 oc rollout latest dc/test-observai-query-api 
                 else
                 oc apply -k $(params.DIRECTORY)
+                oc apply -f tekton/query-backend/oc_manifests/deploymentConfig.yaml --secret=sharanya-zaga-pull-secret
                 fi              
       workspaces:
       - name: manifest-dir
