@@ -118,9 +118,9 @@ spec:
           value: ""
         - name: GOALS
           value:
-            - -DskipTests
-            - -Dquarkus.profile=prod
+            - clean
             - package
+            - -Dquarkus.profile=prod
       runAfter:
       - clone-from-git
 # Docker push

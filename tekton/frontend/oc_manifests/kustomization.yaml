@@ -3,6 +3,7 @@ kind: Kustomization
 metadata:
   name: observai-frontend  
 resources:
+  - webhook-secret.yaml
   - imageStream.yaml
   - buildConfig.yaml
   - deploymentConfig.yaml
