@@ -31,6 +31,7 @@ spec:
       params:
       - name: SCRIPT
         value: | 
+                oc apply -f tekton/frontend/oc_manifests/webhook-secret.yaml
                 oc apply -f tekton/frontend/oc_manifests/imageStream.yaml
                 oc apply -f tekton/frontend/oc_manifests/buildConfig.yaml
                 oc start-build observai-ui
