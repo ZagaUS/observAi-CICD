@@ -10,7 +10,7 @@ metadata:
     app.openshift.io/runtime-namespace: testing-workspace
 spec:
   imagePullSecrets:
-  - name: sharanya-zaga-pull-secret
+  - name: sharanya-secret
   strategy:
     type: Rolling
     rollingParams:
