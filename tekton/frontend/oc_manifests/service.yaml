@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: observai-dashboard
+  name: observai-ui
   namespace: observai-pipeline
 spec:
   selector:
-    app: observai-dashboard
+    app: observai-ui
   ports:
     - protocol: TCP
       port: 8080

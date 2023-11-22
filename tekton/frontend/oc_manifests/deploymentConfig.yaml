@@ -1,10 +1,13 @@
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
-  name: observai-dashboard
+  name: observai-ui
   namespace: observai-pipeline
   labels:
-    app: observai-dashboard
+    app: observai-ui
+    app.kubernetes.io/part-of: observai
+    app.openshift.io/runtime: quarkus
+    app.openshift.io/runtime-namespace: observai-pipeline
 spec:
   strategy:
     type: Recreate
@@ -13,26 +16,26 @@ spec:
       imageChangeParams:
         automatic: true
         containerNames:
-          - observai-dashboard
+          - observai-ui
         from:
           kind: ImageStreamTag
           namespace: observai-pipeline
-          name: 'observai-dashboard:latest'
+          name: 'observai-ui:latest'
   replicas: 1
   selector:
-    app: observai-dashboard
+    app: observai-ui
   template:
     metadata:
       labels:
-        app: observai-dashboard
+        app: observai-ui
     spec:
       containers:
-        - name: observai-dashboard
+        - name: observai-ui
           ports:
             - containerPort: 8080
               protocol: TCP
           imagePullPolicy: IfNotPresent
           image: >-
-            image-registry.openshift-image-registry.svc:5000/observai-pipeline/observai-dashboard:latest
+            image-registry.openshift-image-registry.svc:5000/observai-pipeline/observai-ui:latest
 
 

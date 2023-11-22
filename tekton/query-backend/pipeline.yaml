@@ -119,6 +119,7 @@ spec:
         - name: GOALS
           value:
             - -DskipTests
+            - -Dquarkus.profile=prod
             - package
       runAfter:
       - clone-from-git

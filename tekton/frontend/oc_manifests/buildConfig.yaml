@@ -1,7 +1,7 @@
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: observai-dashboard
+  name: observai-ui
   namespace: observai-pipeline
   labels:
     name: observai
@@ -9,7 +9,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'observai-dashboard:latest'
+      name: 'observai-ui:latest'
   strategy:
     type: Docker
     dockerStrategy:

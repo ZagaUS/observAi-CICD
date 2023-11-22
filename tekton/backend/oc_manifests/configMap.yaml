@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: observai-backend-config
+  name: test-observai-backend-config
   namespace: observai-pipeline
 data:
   APP_PORT: "8080"
