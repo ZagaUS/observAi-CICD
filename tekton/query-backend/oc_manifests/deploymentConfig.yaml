@@ -2,15 +2,15 @@ kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
   name: test-observai-query-api-1
-  namespace: observai-pipeline
+  namespace: testing-workspace
   labels:
     app: test-observai-query-api-1
     app.kubernetes.io/part-of: observai
     app.openshift.io/runtime: quarkus
-    app.openshift.io/runtime-namespace: observai-pipeline
+    app.openshift.io/runtime-namespace: testing-workspace
 spec:
   imagePullSecrets:
-  - name: sharanya-secret
+  - name: sharanya-zaga-pull-secret
   strategy:
     type: Rolling
     rollingParams:

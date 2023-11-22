@@ -2,7 +2,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: maven-source-pvc-query
-  namespace: observai-pipeline
+  namespace: testing-workspace
 spec:
   accessModes:
     - ReadWriteOnce

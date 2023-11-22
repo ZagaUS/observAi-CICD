@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: observai-query-backend
-  namespace: observai-pipeline
+  namespace: testing-workspace
 spec:
   selector:
     app: test-observai-query-api

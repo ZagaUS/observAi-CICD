@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: github-template-query
-  namespace: observai-pipeline
+  namespace: testing-workspace
 spec:
   params:
   - name: url
@@ -37,7 +37,7 @@ spec:
         - name: DOCKERFILE
           value: src/main/docker/Dockerfile.jvm
         - name: OC_NAMESPACE
-          value: observai-pipeline
+          value: testing-workspace
         - name: DEPLOYMENT_NAME
           value: test-observai-query-api
         - name: DIRECTORY

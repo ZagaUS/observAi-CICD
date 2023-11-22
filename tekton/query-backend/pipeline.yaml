@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: buildah-task
-  namespace: observai-pipeline
+  namespace: testing-workspace
 spec:
   workspaces:
     - name: source
@@ -56,7 +56,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
   name: observai-query-backend
-  namespace: observai-pipeline
+  namespace: testing-workspace
 spec:
   params:
   - name: url
@@ -181,7 +181,7 @@ spec:
         value: | 
                 if kubectl get deploymentconfig $(params.DEPLOYMENT_NAME) -n $(params.OC_NAMESPACE) > /dev/null 2>&1; 
                 then
-                oc import-image test-observai-query-api --from=$(params.IMAGE_NAME):latest --confirm -n observai-pipeline
+                oc import-image test-observai-query-api --from=$(params.IMAGE_NAME):latest --confirm -n testing-workspace
                 oc rollout latest dc/test-observai-query-api 
                 else
                 oc apply -k $(params.DIRECTORY)

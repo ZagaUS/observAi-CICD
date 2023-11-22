@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: github-commit-listener-query
-  namespace: observai-pipeline
+  namespace: testing-workspace
 spec:
   triggers:
     - name: github-trigger-query
