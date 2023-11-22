@@ -3,6 +3,7 @@ kind: Kustomization
 metadata:
   name: observai-backend  
 resources:
+  - secret.yaml
   - configMap.yaml
   - deploymentConfig.yaml
   - service.yaml

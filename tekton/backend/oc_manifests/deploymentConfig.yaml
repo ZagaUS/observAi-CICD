@@ -26,7 +26,7 @@ spec:
         deploymentconfig: test-observai-persistance-api
     spec:
       imagePullSecrets:
-        - name: sharanya-secret
+        - name: sharanya-pull-secret
       containers:
         - name: test-observai-persistance-api
           image: >-
