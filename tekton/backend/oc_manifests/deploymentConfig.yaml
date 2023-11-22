@@ -5,34 +5,32 @@ metadata:
   namespace: observai-pipeline
   labels:
       app.kubernetes.io/part-of: observai
+      app.openshift.io/runtime: quarkus
 spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
   triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-          - observai-backend
-        from:
-          kind: ImageStreamTag
-          namespace: obsevai-pipeline
-          name: 'test-observai-persistance-api:latest'
+    - type: ConfigChange
   replicas: 1
   selector:
-      app: observai-backend
+      app: test-observai-persistance-api 
+      deploymentconfig: observai-backend
   template:
     metadata:
       labels:
-        app: observai-backend
+        app: test-observai-query-api
+        deploymentconfig: observai-backend
     spec:
       imagePullSecrets:
-        - name: sharanya-zaga-pull-secret
+        - name: sharanya-secret
       containers:
         - name: observai-backend
           image: >-
             quay.io/zagaos/test-observai-persistance-api
-          ports:
-            - containerPort: 8080
-              protocol: TCP
           env:
             - name: APP_PORT
               valueFrom:
@@ -93,9 +91,26 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: observai-backend-config
-                  key: METRIC_OFFSET_RESET                                   
+                  key: METRIC_OFFSET_RESET  
+            - name: KEPLER_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: KEPLER_BOOTSTRAP_URL
+            - name: KEPLER_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: KEPLER_TOPIC 
+            - name: KEPLER_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-backend-config
+                  key: KEPLER_OFFSET_RESET                                 
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      securityContext: {}
 
 
 

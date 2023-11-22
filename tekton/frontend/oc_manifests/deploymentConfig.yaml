@@ -2,7 +2,7 @@ kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
   name: observai-dashboard
-  namespace: testing-workspace
+  namespace: observai-pipeline
   labels:
     app: observai-dashboard
 spec:
@@ -16,7 +16,7 @@ spec:
           - observai-dashboard
         from:
           kind: ImageStreamTag
-          namespace: testing-workspace
+          namespace: observai-pipeline
           name: 'observai-dashboard:latest'
   replicas: 1
   selector:
@@ -33,6 +33,6 @@ spec:
               protocol: TCP
           imagePullPolicy: IfNotPresent
           image: >-
-            image-registry.openshift-image-registry.svc:5000/testing-workspace/observai-dashboard:latest
+            image-registry.openshift-image-registry.svc:5000/observai-pipeline/observai-dashboard:latest
 
 

@@ -20,7 +20,10 @@ spec:
             claimName: maven-source-pvc
         - name: docker-credentials
           secret:
-            secretName: sharanya-zaga-pull-secret  
+            secretName: sharanya-zaga-pull-secret 
+            items:
+              - key: .dockerconfigjson
+                path: config.json
         - name: maven-settings
           emptyDir: {}
         - name: maven-local-m2

@@ -1,13 +1,13 @@
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
-  name: test-observai-query-api-1
-  namespace: testing-workspace
+  name: test-observai-query-api
+  namespace: observai-pipeline
   labels:
-    app: test-observai-query-api-1
+    app: test-observai-query-api
     app.kubernetes.io/part-of: observai
     app.openshift.io/runtime: quarkus
-    app.openshift.io/runtime-namespace: testing-workspace
+    app.openshift.io/runtime-namespace: observai-pipeline
 spec:
   strategy:
     type: Rolling
@@ -19,27 +19,36 @@ spec:
     - type: ConfigChange
   replicas: 1
   selector:
-    name: observai
-    deploymentconfig: test-observai-query-api-1
+    app: test-observai-query-api
+    deploymentconfig: test-observai-query-api
   template:
     metadata:
       labels:
-        name: observai
-        deploymentconfig: test-observai-query-api-1
+        app: test-observai-query-api
+        deploymentconfig: test-observai-query-api
     spec:
       imagePullSecrets:
         - name: sharanya-secret
       containers:
-        - name: test-observai-query-api-1
+        - name: test-observai-query-api
           image: >-
             quay.io/zagaos/test-observai-query-api
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-            - containerPort: 8443
-              protocol: TCP
-            - containerPort: 8778
-              protocol: TCP
+          env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-query-backend-config
+                  key: APP_PORT
+            - name: APP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-query-backend-config
+                  key: APP_HOST
+            - name: MONGODB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-query-backend-config
+                  key: MONGODB_URL
           resources: {}
           imagePullPolicy: IfNotPresent
       restartPolicy: Always

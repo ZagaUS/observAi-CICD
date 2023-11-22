@@ -37,13 +37,6 @@ spec:
       default: .
       description: Path to the directory to use as context.
       type: string
-  volumes:
-    - name: docker-config-volume
-      secret:
-        secretName: sharanya-zaga-pull-secret
-        items:
-          - key: .dockerconfigjson
-            path: config.json
   steps:
   - name: build-and-push
     image: registry.redhat.io/rhel8/buildah
@@ -170,7 +163,7 @@ spec:
         - name: revision
           value: main
       runAfter:
-       - maven-run    
+       - buildah   
 # Deployment 
     - name: deploy
       taskRef:
@@ -198,6 +191,5 @@ spec:
       - name: manifest-dir
         workspace: shared-workspace
       runAfter:
-       - buildah
        - manifests-clone-from-git
 

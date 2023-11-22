@@ -2,10 +2,11 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
   name: observai-ui-pipeline
-  namespace: testing-workspace
+  namespace: observai-pipeline
 spec:
   params:
   - name: url
+  - name: revision
   workspaces:
     - name: shared-workspace
   tasks:
@@ -20,6 +21,8 @@ spec:
       params: 
         - name: url
           value: $(params.url)
+        - name: revision
+          value: $(params.revision)
 #Oc Tasks
     - name: deploy
       taskRef:

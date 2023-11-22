@@ -1,8 +1,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: buildah-task
-  namespace: testing-workspace
+  name: query-buildah-task
+  namespace: observai-pipeline
 spec:
   workspaces:
     - name: source
@@ -56,7 +56,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata: 
   name: observai-query-backend
-  namespace: testing-workspace
+  namespace: observai-pipeline
 spec:
   params:
   - name: url
@@ -125,7 +125,7 @@ spec:
 # Docker push
     - name: buildah
       taskRef:
-        name: buildah-task
+        name: query-buildah-task
       params:
         - name: DOCKERFILE
           value: $(params.DOCKERFILE)
@@ -181,12 +181,10 @@ spec:
         value: | 
                 if kubectl get deploymentconfig $(params.DEPLOYMENT_NAME) -n $(params.OC_NAMESPACE) > /dev/null 2>&1; 
                 then
-                cat tekton/query-backend/oc_manifests/deploymentConfig.yaml
-                oc import-image test-observai-query-api --from=$(params.IMAGE_NAME):latest --confirm -n testing-workspace
+                oc import-image test-observai-query-api --from=$(params.IMAGE_NAME):latest --confirm -n observai-pipeline
                 oc rollout latest dc/test-observai-query-api 
                 else
                 oc apply -k $(params.DIRECTORY)
-                oc apply -f tekton/query-backend/oc_manifests/deploymentConfig.yaml --secret=sharanya-zaga-pull-secret
                 fi              
       workspaces:
       - name: manifest-dir

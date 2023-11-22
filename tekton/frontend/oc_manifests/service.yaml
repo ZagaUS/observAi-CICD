@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: observai-dashboard
-  namespace: testing-workspace
+  namespace: observai-pipeline
 spec:
   selector:
     app: observai-dashboard

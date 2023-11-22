@@ -2,7 +2,7 @@ kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
   name: observai-dashboard
-  namespace: testing-workspace
+  namespace: observai-pipeline
   labels:
     name: observai
 spec:

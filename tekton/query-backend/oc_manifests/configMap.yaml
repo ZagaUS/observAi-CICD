@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: observai-query-backend-config
-  namespace: testing-workspace
+  namespace: observai-pipeline
 data:
   APP_PORT: "8081"
   APP_HOST: "0.0.0.0"

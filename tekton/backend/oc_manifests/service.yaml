@@ -5,7 +5,7 @@ metadata:
   namespace: observai-pipeline
 spec:
   selector:
-    app: observai-backend
+    app: test-observai-persistance-api
   ports:
     - protocol: TCP
       port: 8080
