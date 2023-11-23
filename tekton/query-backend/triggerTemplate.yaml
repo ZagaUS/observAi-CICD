@@ -28,7 +28,7 @@ spec:
           emptyDir: {}
         - name: maven-local-m2
           persistentVolumeClaim:
-            claimName: query-maven-local-m2-pvc    
+            claimName: query-maven-local-m2-pvc           
         params:
         - name: url
           value: $(tt.params.url)

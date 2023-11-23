@@ -1,10 +1,10 @@
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
-  name: test-observai-query-api
+  name: observai-query-api
   namespace: observai-pipeline
   labels:
-    app: test-observai-query-api
+    app: observai-query-api
     app.kubernetes.io/part-of: observai
     app.openshift.io/runtime: quarkus
     app.openshift.io/runtime-namespace: observai-pipeline
@@ -19,18 +19,18 @@ spec:
     - type: ConfigChange
   replicas: 1
   selector:
-    app: test-observai-query-api
-    deploymentconfig: test-observai-query-api
+    app: observai-query-api
+    deploymentconfig: observai-query-api
   template:
     metadata:
       labels:
-        app: test-observai-query-api
-        deploymentconfig: test-observai-query-api
+        app: observai-query-api
+        deploymentconfig: observai-query-api
     spec:
       imagePullSecrets:
         - name: sharanya-secret
       containers:
-        - name: test-observai-query-api
+        - name: observai-query-api
           image: >-
             quay.io/zagaos/test-observai-query-api
           env:

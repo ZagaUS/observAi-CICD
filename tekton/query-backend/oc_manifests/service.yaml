@@ -5,7 +5,7 @@ metadata:
   namespace: observai-pipeline
 spec:
   selector:
-    app: test-observai-query-api
+    app: observai-query-api
   ports:
     - protocol: TCP
       port: 8081

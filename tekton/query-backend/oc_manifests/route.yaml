@@ -1,7 +1,7 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: test-observai-query-backend
+  name: observai-query-backend
 spec:
   to:
     kind: Service
