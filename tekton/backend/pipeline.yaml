@@ -49,6 +49,22 @@ spec:
 
       buildah push --authfile /etc/secret-volume/config.json $(params.IMAGE_NAME):latest
 
+---
+
+apiVersion: tekton.dev/v1beta1 
+kind: Task 
+metadata: 
+  name: maven-package
+spec:
+  workspaces:
+    - name: output
+  steps: 
+    - name: package
+      image: maven:3.9.5-eclipse-temurin-8-alpine
+      workingDir: $(workspaces.output.path) 
+      script: |
+       mvn package -DskipTests -Dquarkus.profile=prod
+
 
 ---
 
@@ -86,8 +102,6 @@ spec:
     default: " "
   workspaces:
     - name: shared-workspace
-    - name: maven-settings
-    - name: maven-local-m2
     - name: docker-credentials
   tasks:
 #Git Clone Cluster Task
@@ -120,6 +134,7 @@ spec:
         - name: GOALS
           value:
             - -DskipTests
+            - -Dquarkus.profile=prod
             - clean
             - package           
       runAfter:
@@ -149,7 +164,7 @@ spec:
       - name: source
         workspace: shared-workspace
       runAfter:
-       - maven-run
+       - package
 #Git Clone Cluster Task
     - name: manifests-clone-from-git
       taskRef:
