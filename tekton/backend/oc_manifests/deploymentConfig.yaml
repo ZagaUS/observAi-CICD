@@ -92,21 +92,21 @@ spec:
                 configMapKeyRef:
                   name: test-observai-backend-config
                   key: METRIC_OFFSET_RESET  
-            # - name: KEPLER_BOOTSTRAP_URL
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: test-observai-backend-config
-            #       key: KEPLER_BOOTSTRAP_URL
-            # - name: KEPLER_TOPIC
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: test-observai-backend-config
-            #       key: KEPLER_TOPIC 
-            # - name: KEPLER_OFFSET_RESET
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: test-observai-backend-config
-            #       key: KEPLER_OFFSET_RESET                                 
+            - name: KEPLER_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: test-observai-backend-config
+                  key: KEPLER_BOOTSTRAP_URL
+            - name: KEPLER_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: test-observai-backend-config
+                  key: KEPLER_TOPIC 
+            - name: KEPLER_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: test-observai-backend-config
+                  key: KEPLER_OFFSET_RESET                                 
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
       dnsPolicy: ClusterFirst

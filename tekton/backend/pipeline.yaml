@@ -51,23 +51,6 @@ spec:
 
 ---
 
-apiVersion: tekton.dev/v1beta1 
-kind: Task 
-metadata: 
-  name: maven-package
-spec:
-  workspaces:
-    - name: output
-  steps: 
-    - name: package
-      image: maven:3.9.5-eclipse-temurin-8-alpine
-      workingDir: $(workspaces.output.path) 
-      script: |
-       mvn package -DskipTests -Dquarkus.profile=prod
-
-
----
-
 
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -103,6 +86,8 @@ spec:
   workspaces:
     - name: shared-workspace
     - name: docker-credentials
+    - name: maven-settings
+    - name: maven-local-m2
   tasks:
 #Git Clone Cluster Task
     - name: clone-from-git
@@ -164,7 +149,7 @@ spec:
       - name: source
         workspace: shared-workspace
       runAfter:
-       - package
+       - maven-run
 #Git Clone Cluster Task
     - name: manifests-clone-from-git
       taskRef:
