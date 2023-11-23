@@ -1,7 +1,7 @@
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  name: test-observai-persistance-api 
+  name: observai-persistance-api 
   namespace: observai-pipeline
   labels:
       app.kubernetes.io/part-of: observai
@@ -17,13 +17,13 @@ spec:
     - type: ConfigChange
   replicas: 1
   selector:
-      app: test-observai-persistance-api 
-      deploymentconfig: test-observai-persistance-api
+      app: observai-persistance-api 
+      deploymentconfig: observai-persistance-api
   template:
     metadata:
       labels:
-        app: test-observai-persistance-api
-        deploymentconfig: test-observai-persistance-api
+        app: observai-persistance-api
+        deploymentconfig: observai-persistance-api
     spec:
       imagePullSecrets:
         - name: sharanya-pull-secret
