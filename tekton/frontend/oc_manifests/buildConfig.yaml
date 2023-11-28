@@ -13,6 +13,8 @@ spec:
   strategy:
     type: Docker
     dockerStrategy:
+      pullSecret:
+        name: docker-cred
       dockerfilePath: Dockerfile
   source:
     type: Git
